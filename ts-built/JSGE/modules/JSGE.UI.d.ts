@@ -1,7 +1,9 @@
 declare module UI {
     class Color {
         #private;
-        constructor(r: number | Color, g: number, b: number, a?: number);
+        constructor(color: Color);
+        constructor(hex_string: string);
+        constructor(r: number, g: number, b: number, a: number | void);
         get a(): number;
         set a(value: number);
         get r(): number;

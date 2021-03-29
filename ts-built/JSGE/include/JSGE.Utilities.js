@@ -40,6 +40,5 @@ var Utilities;
         customElements.define(tagName.toLowerCase(), elementClass);
     }
     Utilities.defineCustomObject = defineCustomObject;
-    const a = 1;
 })(Utilities || (Utilities = {}));
 export default Utilities;

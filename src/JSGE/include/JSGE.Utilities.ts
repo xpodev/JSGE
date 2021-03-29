@@ -35,9 +35,6 @@ module Utilities {
         }
         customElements.define(tagName.toLowerCase(), elementClass);
     }
-
-    const a: never = 1;
-
 }
 
 export default Utilities;

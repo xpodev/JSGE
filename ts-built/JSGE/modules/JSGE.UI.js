@@ -17,7 +17,7 @@ var UI;
 (function (UI) {
     var _r, _g, _b, _a;
     class Color {
-        constructor(r, g, b, a = 1) {
+        constructor(r, g, b, a) {
             _r.set(this, void 0);
             _g.set(this, void 0);
             _b.set(this, void 0);
@@ -25,7 +25,7 @@ var UI;
             if (typeof r === "string") {
                 this.validate(r);
             }
-            else if (Utilities.isOfType(r, Number) && Utilities.isOfType(g, Number) && Utilities.isOfType(b, Number) && Utilities.isOfType(a, Number)) {
+            else if (Utilities.areOfType([r, g, b, a], Number)) {
                 __classPrivateFieldSet(this, _r, MathA.clamp(r, 0, 255));
                 __classPrivateFieldSet(this, _g, MathA.clamp(g, 0, 255));
                 __classPrivateFieldSet(this, _b, MathA.clamp(b, 0, 255));
@@ -46,25 +46,25 @@ var UI;
             return __classPrivateFieldGet(this, _a);
         }
         set a(value) {
-            __classPrivateFieldSet(this, _a, JSGE.Math.clamp(value, 0, 1));
+            __classPrivateFieldSet(this, _a, MathA.clamp(value, 0, 1));
         }
         get r() {
             return __classPrivateFieldGet(this, _r);
         }
         set r(value) {
-            __classPrivateFieldSet(this, _r, JSGE.Math.clamp(value, 0, 255));
+            __classPrivateFieldSet(this, _r, MathA.clamp(value, 0, 255));
         }
         get g() {
             return __classPrivateFieldGet(this, _g);
         }
         set g(value) {
-            __classPrivateFieldSet(this, _g, JSGE.Math.clamp(value, 0, 255));
+            __classPrivateFieldSet(this, _g, MathA.clamp(value, 0, 255));
         }
         get b() {
             return __classPrivateFieldGet(this, _b);
         }
         set b(value) {
-            __classPrivateFieldSet(this, _b, JSGE.Math.clamp(value, 0, 255));
+            __classPrivateFieldSet(this, _b, MathA.clamp(value, 0, 255));
         }
         /* #endregion */
         /* #region  Pre-defined colors */

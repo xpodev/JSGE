@@ -8,15 +8,17 @@ module UI {
         #b: number
         #a: number
 
-
-        constructor(r: number | Color, g: number, b: number, a: number = 1) {
+        constructor(color: Color);
+        constructor(hex_string: string);
+        constructor(r: number, g: number, b: number, a: number | void);
+        constructor(r: number | Color | string, g: number | void, b: number | void, a: number | void) {
             if (typeof r === "string") {
                 this.validate(r)
-            } else if (Utilities.isOfType(r, Number) && Utilities.isOfType(g, Number) && Utilities.isOfType(b, Number) && Utilities.isOfType(a, Number)) {
+            } else if (Utilities.areOfType([r, g, b, a], Number)) {
                 this.#r = MathA.clamp(r as number, 0, 255);
-                this.#g = MathA.clamp(g, 0, 255);
-                this.#b = MathA.clamp(b, 0, 255);
-                this.#a = MathA.clamp(a, 0, 1);
+                this.#g = MathA.clamp(g as number, 0, 255);
+                this.#b = MathA.clamp(b as number, 0, 255);
+                this.#a = MathA.clamp(a as number, 0, 1);
             } else if (r instanceof Color) {
                 this.#r = r.r;
                 this.#g = r.g;
@@ -32,7 +34,7 @@ module UI {
         }
 
         set a(value) {
-            this.#a = JSGE.Math.clamp(value, 0, 1);
+            this.#a = MathA.clamp(value, 0, 1);
         }
 
         get r() {
@@ -40,7 +42,7 @@ module UI {
         }
 
         set r(value) {
-            this.#r = JSGE.Math.clamp(value, 0, 255);
+            this.#r = MathA.clamp(value, 0, 255);
         }
 
         get g() {
@@ -48,7 +50,7 @@ module UI {
         }
 
         set g(value) {
-            this.#g = JSGE.Math.clamp(value, 0, 255);
+            this.#g = MathA.clamp(value, 0, 255);
         }
 
         get b() {
@@ -56,7 +58,7 @@ module UI {
         }
 
         set b(value) {
-            this.#b = JSGE.Math.clamp(value, 0, 255);
+            this.#b = MathA.clamp(value, 0, 255);
         }
         /* #endregion */
 
@@ -95,7 +97,7 @@ module UI {
         }
         /* #endregion */
 
-        private validate(strColor) {
+        private validate(strColor: string) {
             var hexParts = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(strColor);
             if (hexParts) {
                 this.#r = parseInt(hexParts[1], 16);
