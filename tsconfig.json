@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "target": "ES2017",
+        "outDir": "ts-built",
+        "rootDir": "src",
+        "allowJs": true,
+        "declaration": true
+    }
+}
