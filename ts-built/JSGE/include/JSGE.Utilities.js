@@ -7,7 +7,7 @@ var Utilities;
             if (value instanceof cls || value.prototype instanceof cls || toString.call(value) == '[object ' + cls.name + ']') {
             }
             else if (raiseError) {
-                throw new TypeError(`Member '${value}' in '${obj}' is not valid ${cls.name}`);
+                throw new TypeError(`Member '${value}' in '${obj}' is not valid '${cls.name}'`);
             }
             else {
                 return false;
@@ -21,17 +21,17 @@ var Utilities;
             return true;
         }
         else if (raiseError) {
-            throw new TypeError(`'${obj}' is not valid ${cls.name}`);
+            throw new TypeError(`'${obj}' is not valid '${cls.name}'`);
         }
         return false;
     }
     Utilities.isOfType = isOfType;
     function defineCustomObject(tagName, elementClass = BaseElement) {
         if (!(typeof elementClass == "function")) {
-            throw new TypeError(`${elementClass.name} is not a class`);
+            throw new TypeError(`'${elementClass.name}' is not a class`);
         }
         if (!(elementClass.prototype instanceof HTMLElement)) {
-            throw new TypeError(`${elementClass.name} does not derive from HTMLElement`);
+            throw new TypeError(`'${elementClass.name}' does not derive from HTMLElement`);
         }
         if (elementClass === BaseElement) {
             elementClass = class extends BaseElement {

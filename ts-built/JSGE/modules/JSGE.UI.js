@@ -11,7 +11,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     }
     return privateMap.get(receiver);
 };
-import MathA from '../include/JSGE.Math.js';
+import JMath from '../include/JSGE.Math.js';
 import Utilities from '../include/JSGE.Utilities.js';
 var UI;
 (function (UI) {
@@ -26,10 +26,10 @@ var UI;
                 this.validate(r);
             }
             else if (Utilities.areOfType([r, g, b, a], Number)) {
-                __classPrivateFieldSet(this, _r, MathA.clamp(r, 0, 255));
-                __classPrivateFieldSet(this, _g, MathA.clamp(g, 0, 255));
-                __classPrivateFieldSet(this, _b, MathA.clamp(b, 0, 255));
-                __classPrivateFieldSet(this, _a, MathA.clamp(a, 0, 1));
+                __classPrivateFieldSet(this, _r, JMath.clamp(r, 0, 255));
+                __classPrivateFieldSet(this, _g, JMath.clamp(g, 0, 255));
+                __classPrivateFieldSet(this, _b, JMath.clamp(b, 0, 255));
+                __classPrivateFieldSet(this, _a, JMath.clamp(a, 0, 1));
             }
             else if (r instanceof Color) {
                 __classPrivateFieldSet(this, _r, r.r);
@@ -46,25 +46,25 @@ var UI;
             return __classPrivateFieldGet(this, _a);
         }
         set a(value) {
-            __classPrivateFieldSet(this, _a, MathA.clamp(value, 0, 1));
+            __classPrivateFieldSet(this, _a, JMath.clamp(value, 0, 1));
         }
         get r() {
             return __classPrivateFieldGet(this, _r);
         }
         set r(value) {
-            __classPrivateFieldSet(this, _r, MathA.clamp(value, 0, 255));
+            __classPrivateFieldSet(this, _r, JMath.clamp(value, 0, 255));
         }
         get g() {
             return __classPrivateFieldGet(this, _g);
         }
         set g(value) {
-            __classPrivateFieldSet(this, _g, MathA.clamp(value, 0, 255));
+            __classPrivateFieldSet(this, _g, JMath.clamp(value, 0, 255));
         }
         get b() {
             return __classPrivateFieldGet(this, _b);
         }
         set b(value) {
-            __classPrivateFieldSet(this, _b, MathA.clamp(value, 0, 255));
+            __classPrivateFieldSet(this, _b, JMath.clamp(value, 0, 255));
         }
         /* #endregion */
         /* #region  Pre-defined colors */
@@ -101,7 +101,7 @@ var UI;
                 __classPrivateFieldSet(this, _b, parseInt(hexParts[3], 16));
             }
             else {
-                throw new TypeError(`'${strColor}' is not a valid color. Colors are set by (r, g, b, [Optional a]) or HEX code`);
+                throw new TypeError(`'${strColor}' is not a valid color.`);
             }
         }
     }

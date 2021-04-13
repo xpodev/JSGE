@@ -1,5 +1,5 @@
 declare class GameObject {
-    static A: number;
+    static readonly A = 1;
     /**
      * Renaming the object
      * @param name New name for the object

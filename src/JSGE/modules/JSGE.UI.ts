@@ -1,4 +1,4 @@
-import MathA from '../include/JSGE.Math.js';
+import JMath from '../include/JSGE.Math.js';
 import Utilities from '../include/JSGE.Utilities.js';
 
 module UI {
@@ -15,10 +15,10 @@ module UI {
             if (typeof r === "string") {
                 this.validate(r)
             } else if (Utilities.areOfType([r, g, b, a], Number)) {
-                this.#r = MathA.clamp(r as number, 0, 255);
-                this.#g = MathA.clamp(g as number, 0, 255);
-                this.#b = MathA.clamp(b as number, 0, 255);
-                this.#a = MathA.clamp(a as number, 0, 1);
+                this.#r = JMath.clamp(r as number, 0, 255);
+                this.#g = JMath.clamp(g as number, 0, 255);
+                this.#b = JMath.clamp(b as number, 0, 255);
+                this.#a = JMath.clamp(a as number, 0, 1);
             } else if (r instanceof Color) {
                 this.#r = r.r;
                 this.#g = r.g;
@@ -34,7 +34,7 @@ module UI {
         }
 
         set a(value) {
-            this.#a = MathA.clamp(value, 0, 1);
+            this.#a = JMath.clamp(value, 0, 1);
         }
 
         get r() {
@@ -42,7 +42,7 @@ module UI {
         }
 
         set r(value) {
-            this.#r = MathA.clamp(value, 0, 255);
+            this.#r = JMath.clamp(value, 0, 255);
         }
 
         get g() {
@@ -50,7 +50,7 @@ module UI {
         }
 
         set g(value) {
-            this.#g = MathA.clamp(value, 0, 255);
+            this.#g = JMath.clamp(value, 0, 255);
         }
 
         get b() {
@@ -58,7 +58,7 @@ module UI {
         }
 
         set b(value) {
-            this.#b = MathA.clamp(value, 0, 255);
+            this.#b = JMath.clamp(value, 0, 255);
         }
         /* #endregion */
 
@@ -81,7 +81,7 @@ module UI {
         }
 
         static get cyan() {
-            return new Color(0, 255, 255)
+            return new Color(0, 255, 255);
         }
 
         static get magenta() {
@@ -104,7 +104,7 @@ module UI {
                 this.#g = parseInt(hexParts[2], 16);
                 this.#b = parseInt(hexParts[3], 16);
             } else {
-                throw new TypeError(`'${strColor}' is not a valid color. Colors are set by (r, g, b, [Optional a]) or HEX code`)
+                throw new TypeError(`'${strColor}' is not a valid color.`);
             }
         }
     }

@@ -4,4 +4,3 @@ export { default as Utilities } from "./JSGE/include/JSGE.Utilities.js";
 
 export { default as UI } from "./JSGE/modules/JSGE.UI.js";
 export { default as GameObject } from "./JSGE/modules/JSGE.GameObject.js";
-

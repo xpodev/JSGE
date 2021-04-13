@@ -1,6 +1,6 @@
 import Utilities from "./JSGE.Utilities.js";
 
-module MathA {
+module JMath {
     /** The mathematical constant e. This is Euler's number, the base of natural logarithms. */
     const E: number = Math.E;
     /** The natural logarithm of 10. */
@@ -212,7 +212,7 @@ module MathA {
      * Repeat - t is the reminder of division by 1.
      * @returns Interpolated value, equals to `x + (y - x) * t`.
      */
-    export function lerp(x: number, y: number, t: number, mode: LerpMode = LerpMode.Clamp) {
+    export function lerp(x: number, y: number, t: number, mode: LerpMode = LerpMode.Clamp): number {
         switch (mode) {
             case LerpMode.Clamp:
                 t = clamp(t, 0, 1);
@@ -291,4 +291,4 @@ module MathA {
     }
 }
 
-export default MathA;
+export default JMath;

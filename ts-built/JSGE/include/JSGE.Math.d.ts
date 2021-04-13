@@ -1,4 +1,4 @@
-declare module MathA {
+declare module JMath {
     enum LerpMode {
         Clamp = 0,
         UnClamped = 1,
@@ -142,4 +142,4 @@ declare module MathA {
      */
     function tan(x: number): number;
 }
-export default MathA;
+export default JMath;
