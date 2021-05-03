@@ -1,6 +1,6 @@
 import Utilities from "./JSGE.Utilities.js";
 
-module JMath {
+module _Math {
     /** The mathematical constant e. This is Euler's number, the base of natural logarithms. */
     const E: number = Math.E;
     /** The natural logarithm of 10. */
@@ -118,6 +118,37 @@ module JMath {
     }
 
     export class Vector3 {
+        constructor(private x = 0, private y = 0, private z = 0) {
+
+        }
+
+        get X() {
+            return this.x;
+        }
+
+        set X(x: number) {
+            Utilities.isOfType(x, Number, true);
+            this.x = x;
+        }
+
+        get Y() {
+            return this.y;
+        }
+
+        set Y(y: number) {
+            Utilities.isOfType(y, Number, true);
+            this.y = y;
+        }
+
+        get Z() {
+            return this.z;
+        }
+
+        set Z(z: number) {
+            Utilities.isOfType(z, Number, true);
+            this.z = z;
+        }
+
 
     }
 
@@ -291,4 +322,4 @@ module JMath {
     }
 }
 
-export default JMath;
+export default _Math;
