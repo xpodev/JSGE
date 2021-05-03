@@ -1,12 +1,12 @@
-import JMath from '../include/JSGE.Math.js';
+import _Math from '../include/JSGE.Math.js';
 import Utilities from '../include/JSGE.Utilities.js';
 
 module UI {
     export class Color {
-        #r: number
-        #g: number
-        #b: number
-        #a: number
+        private _r: number
+        private _g: number
+        private _b: number
+        private _a: number
 
         constructor(color: Color);
         constructor(hex_string: string);
@@ -15,50 +15,50 @@ module UI {
             if (typeof r === "string") {
                 this.validate(r)
             } else if (Utilities.areOfType([r, g, b, a], Number)) {
-                this.#r = JMath.clamp(r as number, 0, 255);
-                this.#g = JMath.clamp(g as number, 0, 255);
-                this.#b = JMath.clamp(b as number, 0, 255);
-                this.#a = JMath.clamp(a as number, 0, 1);
+                this._r = _Math.clamp(r as number, 0, 255);
+                this._g = _Math.clamp(g as number, 0, 255);
+                this._b = _Math.clamp(b as number, 0, 255);
+                this._a = _Math.clamp(a as number, 0, 1);
             } else if (r instanceof Color) {
-                this.#r = r.r;
-                this.#g = r.g;
-                this.#b = r.b;
-                this.#a = r.a;
+                this._r = r.r;
+                this._g = r.g;
+                this._b = r.b;
+                this._a = r.a;
             } else {
                 throw new TypeError("Can not create new color with the given arguments");
             }
         }
         /* #region  Color set/get */
         get a() {
-            return this.#a;
+            return this._a;
         }
 
         set a(value) {
-            this.#a = JMath.clamp(value, 0, 1);
+            this._a = _Math.clamp(value, 0, 1);
         }
 
         get r() {
-            return this.#r;
+            return this._r;
         }
 
         set r(value) {
-            this.#r = JMath.clamp(value, 0, 255);
+            this._r = _Math.clamp(value, 0, 255);
         }
 
         get g() {
-            return this.#g;
+            return this._g;
         }
 
         set g(value) {
-            this.#g = JMath.clamp(value, 0, 255);
+            this._g = _Math.clamp(value, 0, 255);
         }
 
         get b() {
-            return this.#b;
+            return this._b;
         }
 
         set b(value) {
-            this.#b = JMath.clamp(value, 0, 255);
+            this._b = _Math.clamp(value, 0, 255);
         }
         /* #endregion */
 
@@ -100,9 +100,9 @@ module UI {
         private validate(strColor: string) {
             var hexParts = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(strColor);
             if (hexParts) {
-                this.#r = parseInt(hexParts[1], 16);
-                this.#g = parseInt(hexParts[2], 16);
-                this.#b = parseInt(hexParts[3], 16);
+                this._r = parseInt(hexParts[1], 16);
+                this._g = parseInt(hexParts[2], 16);
+                this._b = parseInt(hexParts[3], 16);
             } else {
                 throw new TypeError(`'${strColor}' is not a valid color.`);
             }
