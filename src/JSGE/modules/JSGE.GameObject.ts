@@ -1,7 +1,7 @@
 import { Component, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
 
-class GameObject {
+abstract class GameObject {
     constructor(private _name: string) {
 
     }
@@ -40,9 +40,7 @@ class GameObject {
     }
     /* #endregion */
 
-    public draw(ctx: CanvasRenderingContext2D) {
-        
-    }
+    abstract draw(ctx: CanvasRenderingContext2D): void;
 
     forAllChildren(func: (gObj: GameObject) => any) {
         for (const gObj of this.children) {
@@ -58,20 +56,20 @@ class GameObject {
         })
     }
 
-    bindKeyDown(key: string, func: Function) {
-        this._event.addEventListener("keydown", function (event: KeyboardEvent) {
-            if (event.code === key) {
+    bindKeyDown(targetKey: string, func: Function) {
+        Inputs.KeyDown.subscribe((key) => {
+            if (targetKey == key) {
                 func();
             }
-        });
+        })
     }
 
-    bindKeyUp(key: string, func: Function) {
-        this._event.addEventListener("keyup", function (event: KeyboardEvent) {
-            if (event.code === key) {
+    bindKeyUp(targetKey: string, func: Function) {
+        Inputs.KeyUp.subscribe((key) => {
+            if (targetKey == key) {
                 func();
             }
-        });
+        })
     }
 }
 
@@ -85,8 +83,15 @@ export class Rect extends GameObject {
 
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.moveTo(this.position.x, this.position.y);
-        ctx.fillStyle = "#deadbe";
+        ctx.strokeStyle = "#000000";
+        ctx.fillStyle = "red";
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+}
+
+export class NullObject extends GameObject {
+    draw() {
+
     }
 }
 

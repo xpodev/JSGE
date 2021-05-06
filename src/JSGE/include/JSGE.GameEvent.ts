@@ -12,6 +12,10 @@ class GameEvent<T extends Array<any>> {
         }
     }
 
+    unsubscribeAll() {
+        this._callbacks = [];
+    }
+
     invoke(...args: T) {
         this._callbacks.forEach(cb => {
             cb(...args);

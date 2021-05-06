@@ -1,5 +1,5 @@
 import * as JSGE from "./GameEngine.js";
-import {Rect} from "./JSGE/modules/JSGE.GameObject.js";
+import { Rect } from "./JSGE/modules/JSGE.GameObject.js";
 import Input from "./JSGE/include/JSGE.Inputs.js";
 
 const gObj = new Rect("a");
@@ -16,8 +16,8 @@ gObj2.position.set(10, 10);
 
 gObj.bindKeyPress(Input.KeyCode.W, () => {
     gObj.position.translate(new JSGE.Math.Vector2(0, -5));
-})
+});
 
 gObj2.bindKeyPress(Input.KeyCode.W, () => {
     gObj2.position.translate(new JSGE.Math.Vector2(0, -5));
-})
+});

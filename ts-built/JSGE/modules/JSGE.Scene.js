@@ -29,8 +29,8 @@ class Scene {
         this.sceneType = sceneType;
         this.gameObjects = [];
         this._canvas = document.createElement("canvas");
-        this._canvas.style.width = "100%";
-        this._canvas.style.height = "100%";
+        this._canvas.width = window.innerWidth;
+        this._canvas.height = window.innerHeight;
     }
     get name() {
         return this.sceneName;
@@ -43,14 +43,10 @@ class Scene {
             Input.KeyPressed.invoke(Input.KeyCode[event.code]);
         });
         document.addEventListener("keydown", (event) => {
-            this.forAllObjects((gObj) => {
-                gObj.event.dispatchEvent(new KeyboardEvent("keydown", event));
-            });
+            Input.KeyDown.invoke(Input.KeyCode[event.code]);
         });
         document.addEventListener("keyup", (event) => {
-            this.forAllObjects((gObj) => {
-                gObj.event.dispatchEvent(new KeyboardEvent("keyup", event));
-            });
+            Input.KeyUp.invoke(Input.KeyCode[event.code]);
         });
         document.body.append(this._canvas);
         this._updateInterval = setInterval(() => {
@@ -65,11 +61,10 @@ class Scene {
     }
     deactivate() {
         clearInterval(this._updateInterval);
+        Input.KeyDown.unsubscribeAll();
     }
     addGameObject(gameObject) {
         this.gameObjects.push(gameObject);
-    }
-    update() {
     }
 }
 export class Scene2D extends Scene {
@@ -88,5 +83,7 @@ export class Scene3D extends Scene {
     constructor(sceneName) {
         super(sceneName, SceneType.Scene3D);
         this._context = this._canvas.getContext('webgl');
+    }
+    update() {
     }
 }

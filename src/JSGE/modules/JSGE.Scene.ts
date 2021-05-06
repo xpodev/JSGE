@@ -24,16 +24,16 @@ export enum SceneType {
     Scene4D 
 };
 
-class Scene {
+abstract class Scene {
     constructor(private sceneName: string, private sceneType: SceneType) {
         this._canvas = document.createElement("canvas");
-        this._canvas.style.width = "100%";
-        this._canvas.style.height = "100%";
+        this._canvas.width = window.innerWidth;
+        this._canvas.height = window.innerHeight;
     }
 
     private _updateInterval: number;
-    protected _canvas: HTMLCanvasElement;
-    protected _context: CanvasRenderingContext2D | WebGLRenderingContext;
+    protected readonly _canvas: HTMLCanvasElement;
+    protected readonly abstract _context: Context;
     public readonly gameObjects: GameObject[] = [];
 
     public get name(): string {
@@ -50,15 +50,11 @@ class Scene {
         });
         
         document.addEventListener("keydown", (event) => {
-            this.forAllObjects((gObj) => {
-                gObj.event.dispatchEvent(new KeyboardEvent("keydown", event));
-            })
+            Input.KeyDown.invoke(Input.KeyCode[event.code]);
         });
         
         document.addEventListener("keyup", (event) => {
-            this.forAllObjects((gObj) => {
-                gObj.event.dispatchEvent(new KeyboardEvent("keyup", event));
-            })
+            Input.KeyUp.invoke(Input.KeyCode[event.code]);
         });
         
         document.body.append(this._canvas);
@@ -76,15 +72,14 @@ class Scene {
 
     deactivate() {
         clearInterval(this._updateInterval);
+        Input.KeyDown.unsubscribeAll();
     }
     
     addGameObject(gameObject: GameObject) {
         this.gameObjects.push(gameObject);
     }
 
-    update() {
-        
-    }
+    abstract update(): void;
 }
 
 export class Scene2D extends Scene {
@@ -103,6 +98,7 @@ export class Scene2D extends Scene {
     }
     
 }
+
 export class Scene3D extends Scene {
     constructor(sceneName: string) {
         super(sceneName, SceneType.Scene3D);
@@ -110,6 +106,10 @@ export class Scene3D extends Scene {
     }
 
     _context: WebGLRenderingContext;
+
+    update() {
+
+    }
 }
 
-export type Context = CanvasRenderingContext2D | WebGL2RenderingContext | WebGLRenderingContext | null;
+export type Context = CanvasRenderingContext2D | WebGL2RenderingContext | WebGLRenderingContext | ImageBitmapRenderingContext | null;

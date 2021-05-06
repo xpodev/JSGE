@@ -1,7 +1,7 @@
 import { Scene2D } from "./JSGE/modules/JSGE.Scene.js";
 
 export { default as Math } from "./JSGE/include/JSGE.Math.js";
-// export { default as Errors } from "./JSGE/include/JSGE.Errors.js";
+export { default as Errors } from "./JSGE/include/JSGE.Errors.js";
 export { default as Utilities } from "./JSGE/include/JSGE.Utilities.js";
 export { default as Input } from "./JSGE/include/JSGE.Input.js";
 

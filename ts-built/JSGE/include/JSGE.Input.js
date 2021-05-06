@@ -89,8 +89,10 @@ var Inputs;
         KeyCode["ArrowLeft"] = "ArrowLeft";
         KeyCode["ArrowRight"] = "ArrowRight";
     })(KeyCode = Inputs.KeyCode || (Inputs.KeyCode = {}));
-    class KeyPressEvent extends GameEvent {
+    class KeyEvent extends GameEvent {
     }
-    Inputs.KeyPressed = new KeyPressEvent();
+    Inputs.KeyPressed = new KeyEvent();
+    Inputs.KeyDown = new KeyEvent();
+    Inputs.KeyUp = new KeyEvent();
 })(Inputs || (Inputs = {}));
 export default Inputs;

@@ -87,9 +87,11 @@ declare module Inputs {
         ArrowLeft = "ArrowLeft",
         ArrowRight = "ArrowRight"
     }
-    class KeyPressEvent extends GameEvent<[KeyCode]> {
+    class KeyEvent extends GameEvent<[KeyCode]> {
     }
-    export const KeyPressed: KeyPressEvent;
+    export const KeyPressed: KeyEvent;
+    export const KeyDown: KeyEvent;
+    export const KeyUp: KeyEvent;
     export {};
 }
 export default Inputs;

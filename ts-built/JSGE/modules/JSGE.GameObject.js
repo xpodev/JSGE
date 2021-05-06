@@ -27,9 +27,6 @@ class GameObject {
     get components() {
         return this._components;
     }
-    /* #endregion */
-    draw(ctx) {
-    }
     forAllChildren(func) {
         for (const gObj of this.children) {
             func(gObj);
@@ -42,16 +39,16 @@ class GameObject {
             }
         });
     }
-    bindKeyDown(key, func) {
-        this._event.addEventListener("keydown", function (event) {
-            if (event.code === key) {
+    bindKeyDown(targetKey, func) {
+        Inputs.KeyDown.subscribe((key) => {
+            if (targetKey == key) {
                 func();
             }
         });
     }
-    bindKeyUp(key, func) {
-        this._event.addEventListener("keyup", function (event) {
-            if (event.code === key) {
+    bindKeyUp(targetKey, func) {
+        Inputs.KeyUp.subscribe((key) => {
+            if (targetKey == key) {
                 func();
             }
         });
@@ -65,8 +62,13 @@ export class Rect extends GameObject {
     }
     draw(ctx) {
         ctx.moveTo(this.position.x, this.position.y);
-        ctx.fillStyle = "#deadbe";
+        ctx.strokeStyle = "#000000";
+        ctx.fillStyle = "red";
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
+    }
+}
+export class NullObject extends GameObject {
+    draw() {
     }
 }
 export default GameObject;

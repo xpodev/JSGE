@@ -21,13 +21,13 @@ export declare enum SceneType {
      */
     Scene4D = 4
 }
-declare class Scene {
+declare abstract class Scene {
     private sceneName;
     private sceneType;
     constructor(sceneName: string, sceneType: SceneType);
     private _updateInterval;
-    protected _canvas: HTMLCanvasElement;
-    protected _context: CanvasRenderingContext2D | WebGLRenderingContext;
+    protected readonly _canvas: HTMLCanvasElement;
+    protected readonly abstract _context: Context;
     readonly gameObjects: GameObject[];
     get name(): string;
     get type(): SceneType;
@@ -35,7 +35,7 @@ declare class Scene {
     forAllObjects(func: (gObj: GameObject) => any): void;
     deactivate(): void;
     addGameObject(gameObject: GameObject): void;
-    update(): void;
+    abstract update(): void;
 }
 export declare class Scene2D extends Scene {
     constructor(sceneName: string);
@@ -45,6 +45,7 @@ export declare class Scene2D extends Scene {
 export declare class Scene3D extends Scene {
     constructor(sceneName: string);
     _context: WebGLRenderingContext;
+    update(): void;
 }
-export declare type Context = CanvasRenderingContext2D | WebGL2RenderingContext | WebGLRenderingContext | null;
+export declare type Context = CanvasRenderingContext2D | WebGL2RenderingContext | WebGLRenderingContext | ImageBitmapRenderingContext | null;
 export {};

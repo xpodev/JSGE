@@ -11,6 +11,9 @@ class GameEvent {
             this._callbacks.splice(index);
         }
     }
+    unsubscribeAll() {
+        this._callbacks = [];
+    }
     invoke(...args) {
         this._callbacks.forEach(cb => {
             cb(...args);

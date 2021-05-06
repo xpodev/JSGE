@@ -91,11 +91,13 @@ module Inputs {
     }
 
     
-    class KeyPressEvent extends GameEvent<[KeyCode]> {
+    class KeyEvent extends GameEvent<[KeyCode]> {
 
     }
     
-    export const KeyPressed = new KeyPressEvent();
+    export const KeyPressed = new KeyEvent();
+    export const KeyDown = new KeyEvent();
+    export const KeyUp = new KeyEvent();
 }
 
 export default Inputs;
