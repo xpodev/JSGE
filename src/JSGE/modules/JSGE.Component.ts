@@ -5,14 +5,30 @@ import Utilities from "../include/JSGE.Utilities.js";
 import Events from "../include/JSGE.Events.js";
 
 export class Component {
-    private _gameObject: GameObject;
     constructor(gameObject: GameObject) {
         this._gameObject = gameObject;
     }
 
+    private _gameObject: GameObject;
+    private _enabled = true; 
+
+    public readonly name = this.constructor.name;
+
     get gameObject() {
         return this._gameObject;
     }
+
+    set enabled(v: boolean) {
+        this._enabled = v;
+    }
+
+    get enabled() {
+        return this._enabled;
+    }
+}
+
+export interface ComponentClass {
+    new (gameObject: GameObject): Component;
 }
 
 export class Position2D extends Component {
@@ -31,7 +47,7 @@ export class Position2D extends Component {
      * @param {Number} y
      */
     translate(x: _Math.Vector2): _Math.Vector2;
-    translate(x: number , y: number): _Math.Vector2;
+    translate(x: number, y: number): _Math.Vector2;
     translate(x: number | _Math.Vector2, y?: number): _Math.Vector2 {
         if (typeof x == "number" && typeof y == "number") {
             this.x += x;
@@ -48,7 +64,7 @@ export class Position2D extends Component {
     }
 
     set(x: number, y: number, dispatchEvent: boolean): void;
-    set(position: _Math.Vector2, dispatchEvent: boolean) : void;
+    set(position: _Math.Vector2, dispatchEvent: boolean): void;
     set(x: number | _Math.Vector2, y: number | boolean, dispatchEvent = false) {
         if (typeof x == "number" && typeof y == "number") {
             this.x = x;
@@ -95,6 +111,31 @@ export class Position2D extends Component {
         return new _Math.Vector2(this.x, this.y);
     }
 
+    set enabled(v: any) {
+        
+    }
+}
+
+class CollisionBox2D {
+    constructor(
+        public x: number,
+        public y: number,
+        public r: number,
+        public w: number,
+        public h: number) {
+
+    }
+}
+
+export class Collision2D extends Component {
+    constructor(gameObject: GameObject) {
+        super(gameObject);
+        Object.seal(this);
+    }
+
+    private readonly _collisionBoxes: CollisionBox2D[] = [];
+
+    
 }
 
 /**

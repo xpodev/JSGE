@@ -56,6 +56,10 @@ abstract class Scene {
         document.addEventListener("keyup", (event) => {
             Input.KeyUp.invoke(Input.KeyCode[event.code]);
         });
+
+        this._canvas.addEventListener("mousedown", (event) => {
+            Input.MouseClick.invoke(event);
+        });
         
         document.body.append(this._canvas);
         this._updateInterval = setInterval(() => {

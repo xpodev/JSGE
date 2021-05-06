@@ -1,4 +1,4 @@
-import { Component, Position2D } from "./JSGE.Component.js";
+import { Component, ComponentClass, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
 
 abstract class GameObject {
@@ -11,7 +11,7 @@ abstract class GameObject {
     private readonly _event = new EventTarget();
     private _script: HTMLScriptElement;
     private _scriptStart: Function;
-    private readonly _components: ComponentsList = {};
+    public readonly components: ComponentsList = {};
     public readonly position = new Position2D(this);
 
     /* #region  Getter/Setter */
@@ -34,10 +34,6 @@ abstract class GameObject {
     get script() {
         return this._script;
     }
-
-    get components() {
-        return this._components;
-    }
     /* #endregion */
 
     abstract draw(ctx: CanvasRenderingContext2D): void;
@@ -46,6 +42,13 @@ abstract class GameObject {
         for (const gObj of this.children) {
             func(gObj);
         }
+    }
+
+    addComponent(component: ComponentClass) {
+        this.components[component.constructor.name] = new component(this);
+        Object.defineProperty(this, component.name, {
+            get: () => { return this.components[component.name]; }
+        });
     }
 
     bindKeyPress(targetKey: Inputs.KeyCode, func: () => {}) {
@@ -71,6 +74,18 @@ abstract class GameObject {
             }
         })
     }
+
+    bindMouseClick(func: Function, isMouseOver = true) {
+        Inputs.MouseClick.subscribe((event) => {
+            if(isMouseOver) {
+                if(event) {
+
+                }
+            } else {
+                func(event);          
+            }
+        });
+    }
 }
 
 export class Rect extends GameObject {
@@ -83,7 +98,6 @@ export class Rect extends GameObject {
 
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.moveTo(this.position.x, this.position.y);
-        ctx.strokeStyle = "#000000";
         ctx.fillStyle = "red";
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }

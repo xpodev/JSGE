@@ -5,7 +5,7 @@ class GameObject {
         this._name = _name;
         this._children = [];
         this._event = new EventTarget();
-        this._components = {};
+        this.components = {};
         this.position = new Position2D(this);
     }
     /* #region  Getter/Setter */
@@ -24,13 +24,16 @@ class GameObject {
     get script() {
         return this._script;
     }
-    get components() {
-        return this._components;
-    }
     forAllChildren(func) {
         for (const gObj of this.children) {
             func(gObj);
         }
+    }
+    addComponent(component) {
+        this.components[component.constructor.name] = new component(this);
+        Object.defineProperty(this, component.name, {
+            get: () => { return this.components[component.name]; }
+        });
     }
     bindKeyPress(targetKey, func) {
         Inputs.KeyPressed.subscribe((key) => {
@@ -53,6 +56,17 @@ class GameObject {
             }
         });
     }
+    bindMouseClick(func, isMouseOver = true) {
+        Inputs.MouseClick.subscribe((event) => {
+            if (isMouseOver) {
+                if (event) {
+                }
+            }
+            else {
+                func(event);
+            }
+        });
+    }
 }
 export class Rect extends GameObject {
     constructor(name) {
@@ -62,7 +76,6 @@ export class Rect extends GameObject {
     }
     draw(ctx) {
         ctx.moveTo(this.position.x, this.position.y);
-        ctx.strokeStyle = "#000000";
         ctx.fillStyle = "red";
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }

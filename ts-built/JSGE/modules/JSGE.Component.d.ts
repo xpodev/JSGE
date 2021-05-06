@@ -1,9 +1,16 @@
 import GameObject from "./JSGE.GameObject.js";
 import _Math from "../include/JSGE.Math.js";
 export declare class Component {
-    private _gameObject;
     constructor(gameObject: GameObject);
+    private _gameObject;
+    private _enabled;
+    readonly name: string;
     get gameObject(): GameObject;
+    set enabled(v: boolean);
+    get enabled(): boolean;
+}
+export interface ComponentClass {
+    new (gameObject: GameObject): Component;
 }
 export declare class Position2D extends Component {
     /** @param {Number} x  The object's location on the X-axis */
@@ -25,4 +32,9 @@ export declare class Position2D extends Component {
     get y(): number;
     set y(y: number);
     get coords(): _Math.Vector2;
+    set enabled(v: any);
+}
+export declare class Collision2D extends Component {
+    constructor(gameObject: GameObject);
+    private readonly _collisionBoxes;
 }

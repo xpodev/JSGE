@@ -4,10 +4,18 @@ import Utilities from "../include/JSGE.Utilities.js";
 import Events from "../include/JSGE.Events.js";
 export class Component {
     constructor(gameObject) {
+        this._enabled = true;
+        this.name = this.constructor.name;
         this._gameObject = gameObject;
     }
     get gameObject() {
         return this._gameObject;
+    }
+    set enabled(v) {
+        this._enabled = v;
+    }
+    get enabled() {
+        return this._enabled;
     }
 }
 export class Position2D extends Component {
@@ -76,6 +84,24 @@ export class Position2D extends Component {
     }
     get coords() {
         return new _Math.Vector2(this.x, this.y);
+    }
+    set enabled(v) {
+    }
+}
+class CollisionBox2D {
+    constructor(x, y, r, w, h) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.w = w;
+        this.h = h;
+    }
+}
+export class Collision2D extends Component {
+    constructor(gameObject) {
+        super(gameObject);
+        this._collisionBoxes = [];
+        Object.seal(this);
     }
 }
 /**
