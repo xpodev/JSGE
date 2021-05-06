@@ -1,6 +1,6 @@
 import Utilities from "./JSGE.Utilities.js";
-var JMath;
-(function (JMath) {
+var _Math;
+(function (_Math) {
     /** The mathematical constant e. This is Euler's number, the base of natural logarithms. */
     const E = Math.E;
     /** The natural logarithm of 10. */
@@ -21,7 +21,7 @@ var JMath;
         LerpMode[LerpMode["Clamp"] = 0] = "Clamp";
         LerpMode[LerpMode["UnClamped"] = 1] = "UnClamped";
         LerpMode[LerpMode["Repeat"] = 2] = "Repeat";
-    })(LerpMode = JMath.LerpMode || (JMath.LerpMode = {}));
+    })(LerpMode = _Math.LerpMode || (_Math.LerpMode = {}));
     class Vector2 {
         constructor(x = 0, y = 0) {
             this.x = x;
@@ -97,10 +97,36 @@ var JMath;
             return this.x * a.x + this.y * a.y;
         }
     }
-    JMath.Vector2 = Vector2;
+    _Math.Vector2 = Vector2;
     class Vector3 {
+        constructor(x = 0, y = 0, z = 0) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        get X() {
+            return this.x;
+        }
+        set X(x) {
+            Utilities.isOfType(x, Number, true);
+            this.x = x;
+        }
+        get Y() {
+            return this.y;
+        }
+        set Y(y) {
+            Utilities.isOfType(y, Number, true);
+            this.y = y;
+        }
+        get Z() {
+            return this.z;
+        }
+        set Z(z) {
+            Utilities.isOfType(z, Number, true);
+            this.z = z;
+        }
     }
-    JMath.Vector3 = Vector3;
+    _Math.Vector3 = Vector3;
     /**
      * Returns the absolute value of a number (the value without regard to whether it is positive or negative).
      * For example, the absolute value of -5 is the same as the absolute value of 5.
@@ -109,7 +135,7 @@ var JMath;
     function abs(x) {
         return Math.abs(x);
     }
-    JMath.abs = abs;
+    _Math.abs = abs;
     /**
      * Returns the arc cosine (or inverse cosine) of a number.
      * @param x A numeric expression.
@@ -117,7 +143,7 @@ var JMath;
     function acos(x) {
         return Math.acos(x);
     }
-    JMath.acos = acos;
+    _Math.acos = acos;
     /**
      * Returns the arcsine of a number.
      * @param x A numeric expression.
@@ -125,7 +151,7 @@ var JMath;
     function asin(x) {
         return Math.asin(x);
     }
-    JMath.asin = asin;
+    _Math.asin = asin;
     /**
      * Returns the arctangent of a number.
      * @param x A numeric expression for which the arctangent is needed.
@@ -133,7 +159,7 @@ var JMath;
     function atan(x) {
         return Math.atan(x);
     }
-    JMath.atan = atan;
+    _Math.atan = atan;
     /**
      * Returns the angle (in radians) from the X axis to a point.
      * @param y A numeric expression representing the cartesian y-coordinate.
@@ -142,7 +168,7 @@ var JMath;
     function atan2(y, x) {
         return Math.atan2(y, x);
     }
-    JMath.atan2 = atan2;
+    _Math.atan2 = atan2;
     /**
      * Returns the smallest integer greater than or equal to its numeric argument.
      * @param x A numeric expression.
@@ -150,7 +176,7 @@ var JMath;
     function ceil(x) {
         return Math.ceil(x);
     }
-    JMath.ceil = ceil;
+    _Math.ceil = ceil;
     /**
      * Limiting a number to a given range.
      *
@@ -163,7 +189,7 @@ var JMath;
     function clamp(x, min, max) {
         return x < min ? min : max < x ? max : x;
     }
-    JMath.clamp = clamp;
+    _Math.clamp = clamp;
     /**
      * Returns the cosine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
@@ -171,7 +197,7 @@ var JMath;
     function cos(x) {
         return Math.cos(x);
     }
-    JMath.cos = cos;
+    _Math.cos = cos;
     /**
      * Returns e (the base of natural logarithms) raised to a power.
      * @param x A numeric expression representing the power of e.
@@ -179,7 +205,7 @@ var JMath;
     function exp(x) {
         return Math.exp(x);
     }
-    JMath.exp = exp;
+    _Math.exp = exp;
     /**
      * Returns the greatest integer less than or equal to its numeric argument.
      * @param x A numeric expression.
@@ -187,7 +213,7 @@ var JMath;
     function floor(x) {
         return Math.floor(x);
     }
-    JMath.floor = floor;
+    _Math.floor = floor;
     /**
      * Linearly interpolates between two points
      * @param {Number} x Start value, returned when t = 0.
@@ -218,7 +244,7 @@ var JMath;
         }
         return (x + (y - x) * t);
     }
-    JMath.lerp = lerp;
+    _Math.lerp = lerp;
     /**
      * Returns the natural logarithm (base e) of a number.
      * @param x A numeric expression.
@@ -226,7 +252,7 @@ var JMath;
     function log(x) {
         return Math.log(x);
     }
-    JMath.log = log;
+    _Math.log = log;
     /**
      * Returns the larger of a set of supplied numeric expressions.
      * @param values Numeric expressions to be evaluated.
@@ -234,7 +260,7 @@ var JMath;
     function max(...values) {
         return Math.max(...values);
     }
-    JMath.max = max;
+    _Math.max = max;
     /**
      * Returns the smaller of a set of supplied numeric expressions.
      * @param values Numeric expressions to be evaluated.
@@ -242,7 +268,7 @@ var JMath;
     function min(...values) {
         return Math.min(...values);
     }
-    JMath.min = min;
+    _Math.min = min;
     /**
      * Returns the value of a base expression taken to a specified power.
      * @param x The base value of the expression.
@@ -251,12 +277,12 @@ var JMath;
     function pow(x, y) {
         return Math.pow(x, y);
     }
-    JMath.pow = pow;
+    _Math.pow = pow;
     /** Returns a pseudorandom number between 0 and 1. */
     function random() {
         return Math.random();
     }
-    JMath.random = random;
+    _Math.random = random;
     /**
      * Returns a supplied numeric expression rounded to the nearest integer.
      * @param x The value to be rounded to the nearest integer.
@@ -264,7 +290,7 @@ var JMath;
     function round(x) {
         return Math.round(x);
     }
-    JMath.round = round;
+    _Math.round = round;
     /**
      * Returns the sine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
@@ -272,7 +298,7 @@ var JMath;
     function sin(x) {
         return Math.sin(x);
     }
-    JMath.sin = sin;
+    _Math.sin = sin;
     /**
      * Returns the square root of a number.
      * @param x A numeric expression.
@@ -280,7 +306,7 @@ var JMath;
     function sqrt(x) {
         return Math.sqrt(x);
     }
-    JMath.sqrt = sqrt;
+    _Math.sqrt = sqrt;
     /**
      * Returns the tangent of a number.
      * @param x A numeric expression that contains an angle measured in radians.
@@ -288,6 +314,6 @@ var JMath;
     function tan(x) {
         return Math.tan(x);
     }
-    JMath.tan = tan;
-})(JMath || (JMath = {}));
-export default JMath;
+    _Math.tan = tan;
+})(_Math || (_Math = {}));
+export default _Math;

@@ -1,4 +1,4 @@
-declare module JMath {
+declare module _Math {
     enum LerpMode {
         Clamp = 0,
         UnClamped = 1,
@@ -25,6 +25,16 @@ declare module JMath {
         dot(a: Vector2): number;
     }
     class Vector3 {
+        private x;
+        private y;
+        private z;
+        constructor(x?: number, y?: number, z?: number);
+        get X(): number;
+        set X(x: number);
+        get Y(): number;
+        set Y(y: number);
+        get Z(): number;
+        set Z(z: number);
     }
     /**
      * Returns the absolute value of a number (the value without regard to whether it is positive or negative).
@@ -142,4 +152,4 @@ declare module JMath {
      */
     function tan(x: number): number;
 }
-export default JMath;
+export default _Math;
