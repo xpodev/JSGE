@@ -25,6 +25,8 @@ module _Math {
 
     export class Vector2 {
         constructor(private x: number = 0, private y: number = 0) {
+    class Base2D {
+        constructor(protected x: number = 0, protected y: number = 0) {
 
         }
 
@@ -46,11 +48,47 @@ module _Math {
             Utilities.isOfType(y, Number, true);
             this.y = y;
         }
-        /* #endregion */
+    }
+
+    class Base3D {
+        constructor(protected x: number = 0, protected y: number = 0, protected z: number = 0) {
+
+        }
+
+        /* #region  Getter/Setter */
+        get X() {
+            return this.x;
+        }
+
+        set X(x: number) {
+            Utilities.isOfType(x, Number, true);
+            this.x = x;
+        }
+
+        get Y() {
+            return this.y;
+        }
+
+        set Y(y: number) {
+            Utilities.isOfType(y, Number, true);
+            this.y = y;
+        }
+
+        get Z() {
+            return this.z;
+        }
+
+        set Z(z: number) {
+            Utilities.isOfType(z, Number, true);
+            this.z = z;
+        }
+    }
+
+    export class Vector2 extends Base2D{
 
         static add(a: Vector2, b: Vector2): Vector2 {
             Utilities.areOfType([a, b], Vector2, true);
-            return new Vector2(a.x + b.x, a.y + b.y);
+            return new Vector2(a.x + b.y, a.y + b.y);
         }
 
         add(a: Vector2): void {
@@ -115,39 +153,29 @@ module _Math {
             return this.x * a.x + this.y * a.y;
         }
 
+        toPoint(): Point2D {
+            return new Point2D(this.x, this.y);
+        }
+
     }
 
-    export class Vector3 {
-        constructor(private x = 0, private y = 0, private z = 0) {
-
+    export class Vector3 extends Base3D {
+        toPoint(): Point3D {
+            return new Point3D(this.x, this.y, this.z);
         }
+    }
 
-        get X() {
-            return this.x;
+    export class Point2D extends Base2D {
+        toVector(): Vector2 {
+            return new Vector2(this.x, this.y);
         }
+    }
 
-        set X(x: number) {
-            Utilities.isOfType(x, Number, true);
-            this.x = x;
+    export class Point3D extends Base3D {
+        toVector(): Vector3 {
+            return new Vector3(this.x, this.y, this.z);
         }
-
-        get Y() {
-            return this.y;
-        }
-
-        set Y(y: number) {
-            Utilities.isOfType(y, Number, true);
-            this.y = y;
-        }
-
-        get Z() {
-            return this.z;
-        }
-
-        set Z(z: number) {
-            Utilities.isOfType(z, Number, true);
-            this.z = z;
-        }
+    }
 
 
     }
@@ -214,6 +242,13 @@ module _Math {
      */
     export function cos(x: number): number {
         return Math.cos(x);
+    }
+    /**
+     * Converts from radians to degrees.
+     * @param radians The angle in radians to convert to degrees.
+     */
+     export function degrees(radians: number): number {
+        return radians * 180 / Math.PI;
     }
     /**
      * Returns e (the base of natural logarithms) raised to a power.
@@ -298,6 +333,13 @@ module _Math {
      */
     export function round(x: number): number {
         return Math.round(x);
+    }
+    /**
+     * Converts from degrees to radians.
+     * @param degrees The angle in degrees to convert to radians.
+     */
+     export function radians(degrees: number): number {
+        return degrees * Math.PI / 180;
     }
     /**
      * Returns the sine of a number.

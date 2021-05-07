@@ -22,7 +22,7 @@ var _Math;
         LerpMode[LerpMode["UnClamped"] = 1] = "UnClamped";
         LerpMode[LerpMode["Repeat"] = 2] = "Repeat";
     })(LerpMode = _Math.LerpMode || (_Math.LerpMode = {}));
-    class Vector2 {
+    class Base2D {
         constructor(x = 0, y = 0) {
             this.x = x;
             this.y = y;
@@ -42,10 +42,40 @@ var _Math;
             Utilities.isOfType(y, Number, true);
             this.y = y;
         }
-        /* #endregion */
+    }
+    class Base3D {
+        constructor(x = 0, y = 0, z = 0) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+        /* #region  Getter/Setter */
+        get X() {
+            return this.x;
+        }
+        set X(x) {
+            Utilities.isOfType(x, Number, true);
+            this.x = x;
+        }
+        get Y() {
+            return this.y;
+        }
+        set Y(y) {
+            Utilities.isOfType(y, Number, true);
+            this.y = y;
+        }
+        get Z() {
+            return this.z;
+        }
+        set Z(z) {
+            Utilities.isOfType(z, Number, true);
+            this.z = z;
+        }
+    }
+    class Vector2 extends Base2D {
         static add(a, b) {
             Utilities.areOfType([a, b], Vector2, true);
-            return new Vector2(a.x + b.x, a.y + b.y);
+            return new Vector2(a.x + b.y, a.y + b.y);
         }
         add(a) {
             Utilities.isOfType(a, Vector2, true);
@@ -96,37 +126,32 @@ var _Math;
             Utilities.isOfType(a, Vector2, true);
             return this.x * a.x + this.y * a.y;
         }
+        toPoint() {
+            return new Point2D(this.x, this.y);
+        }
     }
     _Math.Vector2 = Vector2;
-    class Vector3 {
-        constructor(x = 0, y = 0, z = 0) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-        }
-        get X() {
-            return this.x;
-        }
-        set X(x) {
-            Utilities.isOfType(x, Number, true);
-            this.x = x;
-        }
-        get Y() {
-            return this.y;
-        }
-        set Y(y) {
-            Utilities.isOfType(y, Number, true);
-            this.y = y;
-        }
-        get Z() {
-            return this.z;
-        }
-        set Z(z) {
-            Utilities.isOfType(z, Number, true);
-            this.z = z;
+    class Vector3 extends Base3D {
+        toPoint() {
+            return new Point3D(this.x, this.y, this.z);
         }
     }
     _Math.Vector3 = Vector3;
+    class Point2D extends Base2D {
+        toVector() {
+            return new Vector2(this.x, this.y);
+        }
+    }
+    _Math.Point2D = Point2D;
+    class Point3D extends Base3D {
+        toVector() {
+            return new Vector3(this.x, this.y, this.z);
+        }
+    }
+    _Math.Point3D = Point3D;
+    class Matrix {
+    }
+    _Math.Matrix = Matrix;
     /**
      * Returns the absolute value of a number (the value without regard to whether it is positive or negative).
      * For example, the absolute value of -5 is the same as the absolute value of 5.
@@ -198,6 +223,14 @@ var _Math;
         return Math.cos(x);
     }
     _Math.cos = cos;
+    /**
+     * Converts from radians to degrees.
+     * @param radians The angle in radians to convert to degrees.
+     */
+    function degrees(radians) {
+        return radians * 180 / Math.PI;
+    }
+    _Math.degrees = degrees;
     /**
      * Returns e (the base of natural logarithms) raised to a power.
      * @param x A numeric expression representing the power of e.
@@ -291,6 +324,14 @@ var _Math;
         return Math.round(x);
     }
     _Math.round = round;
+    /**
+     * Converts from degrees to radians.
+     * @param degrees The angle in degrees to convert to radians.
+     */
+    function radians(degrees) {
+        return degrees * Math.PI / 180;
+    }
+    _Math.radians = radians;
     /**
      * Returns the sine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
