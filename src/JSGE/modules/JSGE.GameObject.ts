@@ -1,5 +1,7 @@
-import { Component, ComponentClass, Position2D } from "./JSGE.Component.js";
+import { Collision, Component, IComponent, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
+import Utilities from "../include/JSGE.Utilities.js";
+import Errors from "../include/JSGE.Errors.js";
 
 abstract class GameObject {
     constructor(private _name: string) {
@@ -44,45 +46,64 @@ abstract class GameObject {
         }
     }
 
-    addComponent(component: ComponentClass) {
+    addComponent(component: IComponent) {
         this.components[component.constructor.name] = new component(this);
         Object.defineProperty(this, component.name, {
             get: () => { return this.components[component.name]; }
         });
     }
 
-    bindKeyPress(targetKey: Inputs.KeyCode, func: () => {}) {
+    getComponent(component: IComponent, raiseError = true) {
+        var result = Object.values(this.components).find((c) => {
+            return Utilities.isOfType(c, component);
+        });
+        if (result) {
+            return result;
+        }
+        if (raiseError) {
+            throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
+        }
+        return null;
+    }
+
+    hasComponent(component: IComponent) {
+        return this.getComponent(component, false) !== null;
+    }
+
+    bindKeyPress(targetKey: Inputs.KeyCode, callback: () => {}) {
         Inputs.KeyPressed.subscribe((key) => {
             if (targetKey == key) {
-                func();
+                callback();
             }
         })
     }
 
-    bindKeyDown(targetKey: string, func: Function) {
+    bindKeyDown(targetKey: string, callback: Function) {
         Inputs.KeyDown.subscribe((key) => {
             if (targetKey == key) {
-                func();
+                callback();
             }
         })
     }
 
-    bindKeyUp(targetKey: string, func: Function) {
+    bindKeyUp(targetKey: string, callback: Function) {
         Inputs.KeyUp.subscribe((key) => {
             if (targetKey == key) {
-                func();
+                callback();
             }
         })
     }
 
-    bindMouseClick(func: Function, isMouseOver = true) {
+    bindMouseClick(callback: (ev: MouseEvent) => any, isMouseOver = true) {
         Inputs.MouseClick.subscribe((event) => {
             if(isMouseOver) {
-                if(event) {
-
+                if(this.hasComponent(Collision)) {
+                    
+                } else {
+                    throw new Errors.InvalidOperationError("Detect MouseOver needs collision on the GameObject");
                 }
             } else {
-                func(event);          
+                callback(event);          
             }
         });
     }

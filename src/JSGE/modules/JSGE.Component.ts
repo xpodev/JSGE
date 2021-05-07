@@ -3,6 +3,7 @@ import _Math from "../include/JSGE.Math.js";
 import Utilities from "../include/JSGE.Utilities.js";
 // import Errors from "../include/JSGE.Errors";
 import Events from "../include/JSGE.Events.js";
+import Errors from "../include/JSGE.Errors.js";
 
 export class Component {
     constructor(gameObject: GameObject) {
@@ -10,7 +11,7 @@ export class Component {
     }
 
     private _gameObject: GameObject;
-    private _enabled = true; 
+    private _enabled = true;
 
     public readonly name = this.constructor.name;
 
@@ -18,7 +19,7 @@ export class Component {
         return this._gameObject;
     }
 
-    set enabled(v: boolean) {
+    enable(v: boolean = true) {
         this._enabled = v;
     }
 
@@ -27,8 +28,8 @@ export class Component {
     }
 }
 
-export interface ComponentClass {
-    new (gameObject: GameObject): Component;
+export interface IComponent {
+    new(gameObject: GameObject): Component;
 }
 
 export class Position2D extends Component {
@@ -38,6 +39,7 @@ export class Position2D extends Component {
     private _y: number = 0;
     constructor(gameObject: GameObject) {
         super(gameObject);
+        delete this.enable;
         Object.seal(this);
     }
 
@@ -111,31 +113,62 @@ export class Position2D extends Component {
         return new _Math.Vector2(this.x, this.y);
     }
 
+    get enabled() {
+        return true;
+    }
+
     set enabled(v: any) {
-        
+        throw new Errors.InvalidOperationError(`Can not set enable for ${this.name} component`);
     }
 }
 
-class CollisionBox2D {
+class AxisAlignedBoundingBox {
+    constructor(root: _Math.Vector2, w: number, h: number);
+    constructor(L: number, T: number, R: number, B: number);
+    constructor() {
+
+    }
+}
+
+export class BoxCollider2D {
     constructor(
         public x: number,
         public y: number,
         public r: number,
         public w: number,
         public h: number) {
+        
+    }
 
+
+    private _L
+
+    checkPoint(x: number, y: number) {
+        if()
     }
 }
 
-export class Collision2D extends Component {
+export class Collision extends Component {
+    constructor(gameObject: GameObject) {
+        super(gameObject);
+    }
+}
+
+export class Collision2D extends Collision {
     constructor(gameObject: GameObject) {
         super(gameObject);
         Object.seal(this);
     }
 
-    private readonly _collisionBoxes: CollisionBox2D[] = [];
+    private readonly _collisionBoxes: BoxCollider2D[] = [];
 
-    
+    addCollisionBox(box: BoxCollider2D) {
+        this._collisionBoxes.push(box);
+    }
+
+    get collisionBoxes() {
+        return this._collisionBoxes;
+    }
 }
 
 /**

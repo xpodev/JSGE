@@ -1,7 +1,7 @@
 import * as JSGE from "./GameEngine.js";
 import { Rect } from "./JSGE/modules/JSGE.GameObject.js";
 import Input from "./JSGE/include/JSGE.Inputs.js";
-import { Collision2D } from "./JSGE/modules/JSGE.Component.js";
+import { Collision, Collision2D } from "./JSGE/modules/JSGE.Component.js";
 
 const gObj = new Rect("a");
 const gObj2 = new Rect("b");
@@ -25,3 +25,5 @@ gObj.bindMouseClick((ev) => {
 });
 
 gObj.addComponent(Collision2D);
+
+console.log(gObj.getComponent(Collision));

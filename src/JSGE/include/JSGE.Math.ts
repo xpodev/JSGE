@@ -23,8 +23,30 @@ module _Math {
         Repeat
     }
 
-    export class Vector2 {
-        constructor(private x: number = 0, private y: number = 0) {
+    export const ROTATION_MATRIX = {
+        m11: 0,
+        m12: 0,
+        m21: 0,
+        m22: 0,
+        /**
+         * 
+         * @param r Angle in degrees
+         */
+        setAngle: (r: number) => {
+            const rad = radians(r); 
+            ROTATION_MATRIX.m11 = Math.cos(rad);
+            ROTATION_MATRIX.m12 = Math.sin(rad);
+            ROTATION_MATRIX.m21 = Math.sin(-rad);
+            ROTATION_MATRIX.m22 = Math.cos(-rad);
+        },
+
+        multiply: (v: Vector2): Vector2 => {
+            const x = v.X * ROTATION_MATRIX.m11 + v.X * ROTATION_MATRIX.m12;
+            const y = v.Y * ROTATION_MATRIX.m21 + v.Y * ROTATION_MATRIX.m22;
+            return new Vector2(x, y);
+        }
+    };
+
     class Base2D {
         constructor(protected x: number = 0, protected y: number = 0) {
 
@@ -177,6 +199,7 @@ module _Math {
         }
     }
 
+    export class Matrix {
 
     }
 

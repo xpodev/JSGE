@@ -22,6 +22,28 @@ var _Math;
         LerpMode[LerpMode["UnClamped"] = 1] = "UnClamped";
         LerpMode[LerpMode["Repeat"] = 2] = "Repeat";
     })(LerpMode = _Math.LerpMode || (_Math.LerpMode = {}));
+    _Math.ROTATION_MATRIX = {
+        m11: 0,
+        m12: 0,
+        m21: 0,
+        m22: 0,
+        /**
+         *
+         * @param r Angle in degrees
+         */
+        setAngle: (r) => {
+            const rad = radians(r);
+            _Math.ROTATION_MATRIX.m11 = Math.cos(rad);
+            _Math.ROTATION_MATRIX.m12 = Math.sin(rad);
+            _Math.ROTATION_MATRIX.m21 = Math.sin(-rad);
+            _Math.ROTATION_MATRIX.m22 = Math.cos(-rad);
+        },
+        multiply: (v) => {
+            const x = v.X * _Math.ROTATION_MATRIX.m11 + v.X * _Math.ROTATION_MATRIX.m12;
+            const y = v.Y * _Math.ROTATION_MATRIX.m21 + v.Y * _Math.ROTATION_MATRIX.m22;
+            return new Vector2(x, y);
+        }
+    };
     class Base2D {
         constructor(x = 0, y = 0) {
             this.x = x;

@@ -1,4 +1,4 @@
-import { Component, ComponentClass, Position2D } from "./JSGE.Component.js";
+import { Component, IComponent, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
 declare abstract class GameObject {
     private _name;
@@ -17,11 +17,13 @@ declare abstract class GameObject {
     get script(): HTMLScriptElement;
     abstract draw(ctx: CanvasRenderingContext2D): void;
     forAllChildren(func: (gObj: GameObject) => any): void;
-    addComponent(component: ComponentClass): void;
-    bindKeyPress(targetKey: Inputs.KeyCode, func: () => {}): void;
-    bindKeyDown(targetKey: string, func: Function): void;
-    bindKeyUp(targetKey: string, func: Function): void;
-    bindMouseClick(func: Function, isMouseOver?: boolean): void;
+    addComponent(component: IComponent): void;
+    getComponent(component: IComponent, raiseError?: boolean): Component;
+    hasComponent(component: IComponent): boolean;
+    bindKeyPress(targetKey: Inputs.KeyCode, callback: () => {}): void;
+    bindKeyDown(targetKey: string, callback: Function): void;
+    bindKeyUp(targetKey: string, callback: Function): void;
+    bindMouseClick(callback: (ev: MouseEvent) => any, isMouseOver?: boolean): void;
 }
 export declare class Rect extends GameObject {
     constructor(name: string);

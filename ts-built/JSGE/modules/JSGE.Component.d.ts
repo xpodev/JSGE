@@ -6,10 +6,10 @@ export declare class Component {
     private _enabled;
     readonly name: string;
     get gameObject(): GameObject;
-    set enabled(v: boolean);
+    enable(v?: boolean): void;
     get enabled(): boolean;
 }
-export interface ComponentClass {
+export interface IComponent {
     new (gameObject: GameObject): Component;
 }
 export declare class Position2D extends Component {
@@ -32,9 +32,25 @@ export declare class Position2D extends Component {
     get y(): number;
     set y(y: number);
     get coords(): _Math.Vector2;
+    get enabled(): any;
     set enabled(v: any);
 }
-export declare class Collision2D extends Component {
+export declare class BoxCollider2D {
+    x: number;
+    y: number;
+    r: number;
+    w: number;
+    h: number;
+    constructor(x: number, y: number, r: number, w: number, h: number);
+    private _L;
+    checkPoint(x: number, y: number): void;
+}
+export declare class Collision extends Component {
+    constructor(gameObject: GameObject);
+}
+export declare class Collision2D extends Collision {
     constructor(gameObject: GameObject);
     private readonly _collisionBoxes;
+    addCollisionBox(box: BoxCollider2D): void;
+    get collisionBoxes(): BoxCollider2D[];
 }

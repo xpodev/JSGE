@@ -2,6 +2,7 @@ import _Math from "../include/JSGE.Math.js";
 import Utilities from "../include/JSGE.Utilities.js";
 // import Errors from "../include/JSGE.Errors";
 import Events from "../include/JSGE.Events.js";
+import Errors from "../include/JSGE.Errors.js";
 export class Component {
     constructor(gameObject) {
         this._enabled = true;
@@ -11,7 +12,7 @@ export class Component {
     get gameObject() {
         return this._gameObject;
     }
-    set enabled(v) {
+    enable(v = true) {
         this._enabled = v;
     }
     get enabled() {
@@ -25,6 +26,7 @@ export class Position2D extends Component {
         this._x = 0;
         /** @param {Number} y The object's location on the Y-axis */
         this._y = 0;
+        delete this.enable;
         Object.seal(this);
     }
     translate(x, y) {
@@ -85,10 +87,18 @@ export class Position2D extends Component {
     get coords() {
         return new _Math.Vector2(this.x, this.y);
     }
+    get enabled() {
+        return true;
+    }
     set enabled(v) {
+        throw new Errors.InvalidOperationError(`Can not set enable for ${this.name} component`);
     }
 }
-class CollisionBox2D {
+class AxisAlignedBoundingBox {
+    constructor() {
+    }
+}
+export class BoxCollider2D {
     constructor(x, y, r, w, h) {
         this.x = x;
         this.y = y;
@@ -96,12 +106,27 @@ class CollisionBox2D {
         this.w = w;
         this.h = h;
     }
+    checkPoint(x, y) {
+        if ()
+            ;
+    }
 }
-export class Collision2D extends Component {
+export class Collision extends Component {
+    constructor(gameObject) {
+        super(gameObject);
+    }
+}
+export class Collision2D extends Collision {
     constructor(gameObject) {
         super(gameObject);
         this._collisionBoxes = [];
         Object.seal(this);
+    }
+    addCollisionBox(box) {
+        this._collisionBoxes.push(box);
+    }
+    get collisionBoxes() {
+        return this._collisionBoxes;
     }
 }
 /**

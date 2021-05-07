@@ -76,11 +76,12 @@ var UI;
         }
         /* #endregion */
         validate(strColor) {
-            var hexParts = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(strColor);
+            var hexParts = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})?$/i.exec(strColor);
             if (hexParts) {
                 this._r = parseInt(hexParts[1], 16);
                 this._g = parseInt(hexParts[2], 16);
                 this._b = parseInt(hexParts[3], 16);
+                this._a = parseInt(hexParts[4], 16);
             }
             else {
                 throw new TypeError(`'${strColor}' is not a valid color.`);

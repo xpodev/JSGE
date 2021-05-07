@@ -1,12 +1,21 @@
 declare module _Math {
-    enum LerpMode {
+    export enum LerpMode {
         Clamp = 0,
         UnClamped = 1,
         Repeat = 2
     }
-    class Vector2 {
-        private x;
-        private y;
+    export const ROTATION_MATRIX: {
+        m11: number;
+        m12: number;
+        m21: number;
+        m22: number;
+        /**
+         *
+         * @param r Angle in degrees
+         */
+        setAngle: (r: number) => void;
+        multiply: (v: Vector2) => Vector2;
+    };
     class Base2D {
         protected x: number;
         protected y: number;

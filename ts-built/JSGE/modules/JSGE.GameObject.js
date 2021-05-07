@@ -1,5 +1,7 @@
-import { Position2D } from "./JSGE.Component.js";
+import { Collision, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
+import Utilities from "../include/JSGE.Utilities.js";
+import Errors from "../include/JSGE.Errors.js";
 class GameObject {
     constructor(_name) {
         this._name = _name;
@@ -35,35 +37,53 @@ class GameObject {
             get: () => { return this.components[component.name]; }
         });
     }
-    bindKeyPress(targetKey, func) {
+    getComponent(component, raiseError = true) {
+        var result = Object.values(this.components).find((c) => {
+            return Utilities.isOfType(c, component);
+        });
+        if (result) {
+            return result;
+        }
+        if (raiseError) {
+            throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
+        }
+        return null;
+    }
+    hasComponent(component) {
+        return this.getComponent(component, false) !== null;
+    }
+    bindKeyPress(targetKey, callback) {
         Inputs.KeyPressed.subscribe((key) => {
             if (targetKey == key) {
-                func();
+                callback();
             }
         });
     }
-    bindKeyDown(targetKey, func) {
+    bindKeyDown(targetKey, callback) {
         Inputs.KeyDown.subscribe((key) => {
             if (targetKey == key) {
-                func();
+                callback();
             }
         });
     }
-    bindKeyUp(targetKey, func) {
+    bindKeyUp(targetKey, callback) {
         Inputs.KeyUp.subscribe((key) => {
             if (targetKey == key) {
-                func();
+                callback();
             }
         });
     }
-    bindMouseClick(func, isMouseOver = true) {
+    bindMouseClick(callback, isMouseOver = true) {
         Inputs.MouseClick.subscribe((event) => {
             if (isMouseOver) {
-                if (event) {
+                if (this.hasComponent(Collision)) {
+                }
+                else {
+                    throw new Errors.InvalidOperationError("Detect MouseOver needs collision on the GameObject");
                 }
             }
             else {
-                func(event);
+                callback(event);
             }
         });
     }
