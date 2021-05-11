@@ -1,5 +1,6 @@
 import GameObject from "./JSGE.GameObject.js";
 import Input from "../include/JSGE.Input.js";
+import { BoxCollider2D, Collider2D } from "./JSGE.Component.js";
 
 export enum SceneType {
     /**
@@ -21,7 +22,7 @@ export enum SceneType {
     /**
      * Don't use that
      */
-    Scene4D 
+    Scene4D
 };
 
 abstract class Scene {
@@ -48,11 +49,11 @@ abstract class Scene {
         document.addEventListener("keypress", (event) => {
             Input.KeyPressed.invoke(Input.KeyCode[event.code]);
         });
-        
+
         document.addEventListener("keydown", (event) => {
             Input.KeyDown.invoke(Input.KeyCode[event.code]);
         });
-        
+
         document.addEventListener("keyup", (event) => {
             Input.KeyUp.invoke(Input.KeyCode[event.code]);
         });
@@ -60,11 +61,11 @@ abstract class Scene {
         this._canvas.addEventListener("mousedown", (event) => {
             Input.MouseClick.invoke(event);
         });
-        
+
         document.body.append(this._canvas);
         this._updateInterval = setInterval(() => {
             this.update();
-        }, 1000/60);
+        }, 1000 / 60);
     }
 
     forAllObjects(func: (gObj: GameObject) => any) {
@@ -78,7 +79,7 @@ abstract class Scene {
         clearInterval(this._updateInterval);
         Input.KeyDown.unsubscribeAll();
     }
-    
+
     addGameObject(gameObject: GameObject) {
         this.gameObjects.push(gameObject);
     }
@@ -96,11 +97,30 @@ export class Scene2D extends Scene {
 
     update() {
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        for(const gObj of this.gameObjects) {
+        const objectWithCollider = this.gameObjects.filter((gameObject) => {
+            return gameObject.hasComponent(Collider2D);
+        })
+        for (const gObj of objectWithCollider) {
+            const fCollider = (gObj.getComponent(Collider2D) as Collider2D);
+            fCollider.colliders.forEach((collider) => {
+                for (const lpObj of this.gameObjects) {
+                    if(lpObj == gObj) {
+                        continue;
+                    }
+                    const sCollider = lpObj.getComponent<Collider2D>(Collider2D);
+                    sCollider.colliders.forEach((otherCollider) => {
+                        const collisionPoint = (collider as BoxCollider2D).collisionPointsWith(otherCollider as BoxCollider2D);
+                        if(collisionPoint.length) {
+                            fCollider.collisionEnter.invoke({other: lpObj, points: collisionPoint});
+                            sCollider.collisionEnter.invoke({other: gObj, points: collisionPoint});
+                        }
+                    })
+                }
+            });
             gObj.draw(this._context);
         }
     }
-    
+
 }
 
 export class Scene3D extends Scene {

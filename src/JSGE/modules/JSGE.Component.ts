@@ -4,6 +4,7 @@ import Utilities from "../include/JSGE.Utilities.js";
 // import Errors from "../include/JSGE.Errors";
 import Events from "../include/JSGE.Events.js";
 import Errors from "../include/JSGE.Errors.js";
+import GameEvent from "../include/JSGE.GameEvent.js";
 
 export class Component {
     constructor(gameObject: GameObject) {
@@ -61,8 +62,8 @@ export class Position2D extends Component {
         } else {
             throw new TypeError(`Can not translate '${this.gameObject.name}' with the given arguments '${x}','${y}'`);
         }
-        this.gameObject.event.dispatchEvent(Events.POSITION_CHANGED);
-        return this.coords;
+        this.gameObject.positionChanged.invoke(this);
+        return this.coords.toVector();
     }
 
     set(x: number, y: number, dispatchEvent: boolean): void;
@@ -72,7 +73,7 @@ export class Position2D extends Component {
             this.x = x;
             this.y = y;
             if (dispatchEvent) {
-                this.gameObject.event.dispatchEvent(Events.POSITION_CHANGED);
+                this.gameObject.positionChanged.invoke(this);
             }
         } else if (Utilities.isOfType(x, _Math.Vector2)) {
             x = x as _Math.Vector2;
@@ -80,7 +81,7 @@ export class Position2D extends Component {
             this.x = x.X;
             this.y = x.Y;
             if (y) {
-                this.gameObject.event.dispatchEvent(Events.POSITION_CHANGED);
+                this.gameObject.positionChanged.invoke(this);
             }
         } else {
             throw new TypeError(`Can not set position of '${this.gameObject.name}' with the given arguments '${x}','${y}'`);
@@ -94,7 +95,7 @@ export class Position2D extends Component {
     set x(x: number) {
         if (Utilities.isOfType(x, Number)) {
             this._x = x;
-            this.gameObject.event.dispatchEvent(Events.POSITION_CHANGED);
+            this.gameObject.positionChanged.invoke(this);
         }
     }
 
@@ -105,12 +106,12 @@ export class Position2D extends Component {
     set y(y: number) {
         if (Utilities.isOfType(y, Number)) {
             this._y = y;
-            this.gameObject.event.dispatchEvent(Events.POSITION_CHANGED);
+            this.gameObject.positionChanged.invoke(this);
         }
     }
 
     get coords() {
-        return new _Math.Vector2(this.x, this.y);
+        return new _Math.Point2D(this.x, this.y);
     }
 
     get enabled() {
@@ -123,52 +124,223 @@ export class Position2D extends Component {
 }
 
 class AxisAlignedBoundingBox {
-    constructor(root: _Math.Vector2, w: number, h: number);
-    constructor(L: number, T: number, R: number, B: number);
-    constructor() {
+    constructor(l: number, t: number, r: number, b: number);
+    constructor(root: _Math.Point2D, w: number, h: number);
+    constructor(center: _Math.Point2D, extent: _Math.Vector2);
+    constructor(a: number | _Math.Point2D, b: number | _Math.Vector2, c?: number, d?: number) {
+        if (typeof a == "number") {
+            // L T R B implementation
+            this._L = a as number;
+            this._T = b as number;
+            this._R = c as number;
+            this._B = d as number;
+        } else if (Utilities.isOfType(a, _Math.Point2D) && typeof b == "number") {
+            // root w h implementation
+            this._L = a.X;
+            this._T = a.Y;
+            this._R = a.X + b;
+            this._B = a.Y + c;
+        } else {
+            // center extent implementation
+            a = a as _Math.Point2D;
+        }
+    }
 
+    private _L: number;
+    private _T: number;
+    private _R: number;
+    private _B: number;
+
+    get W(): number {
+        return this.R - this.L;
+    }
+
+    get H(): number {
+        return this.B - this.T;
+    }
+
+    get L() {
+        return this._L;
+    }
+
+    get T() {
+        return this._T;
+    }
+
+    get R() {
+        return this._R;
+    }
+
+    get B() {
+        return this._B;
+    }
+
+    get vertices() {
+        return [
+            new _Math.Point2D(this.L, this.T),
+            new _Math.Point2D(this.R, this.T),
+            new _Math.Point2D(this.L, this.B),
+            new _Math.Point2D(this.R, this.B)
+        ];
+    }
+
+    verticesAsObject(): Vertices {
+        return {
+            lt: new _Math.Point2D(this.L, this.T),
+            rt: new _Math.Point2D(this.R, this.T),
+            lb: new _Math.Point2D(this.L, this.B),
+            rb: new _Math.Point2D(this.R, this.B)
+        };
+    }
+
+    translate(v: _Math.Vector2) {
+        this._L += v.X;
+        this._T += v.Y;
+        this._R += v.X;
+        this._B += v.Y;
+    }
+
+    moveTo(p: _Math.Point2D) {
+        this._R = p.X + this.W;
+        this._B = p.Y + this.H;
+        this._L = p.X;
+        this._T = p.Y;
+    }
+
+    contains(p: _Math.Point2D) {
+        return !(p.X < this.L || p.X > this.R || p.Y < this.T || p.Y > this.B);
+    }
+
+    touches(p: _Math.Point2D) {
+        return ((p.X == this.L || p.X == this.R) && (p.Y >= this.T && p.Y <= this.B) ||
+            (p.Y == this.T || p.Y == this.B) && (p.X >= this.L && p.X <= this.R));
     }
 }
 
-export class BoxCollider2D {
+interface ICollider {
+    contains(p: _Math.Point2D | _Math.Point3D): boolean;
+    touches(p: _Math.Point2D | _Math.Point3D): boolean;
+    moveTo(p: _Math.Point2D | _Math.Point3D): void;
+    collisionPointsWith(other: ICollider): _Math.Point2D[] | _Math.Point3D[] | undefined;
+}
+
+export class BoxCollider2D implements ICollider {
     constructor(
         public x: number,
         public y: number,
         public r: number,
         public w: number,
-        public h: number) {
-        
+        public h: number
+    ) {
+        this._box = new AxisAlignedBoundingBox(new _Math.Point2D(x, y), w, h);
+        this._rotationMatrix = new _Math.RotationMatrix2D();
+        this.angle = r;
     }
 
-
-    private _L
-
-    checkPoint(x: number, y: number) {
-        if()
+    contains(p: _Math.Point2D): boolean {
+        return this._box.contains(this._rotationMatrix.transform(p));
     }
+
+    touches(p: _Math.Point2D): boolean {
+        return this._box.touches(this._rotationMatrix.transform(p));
+    }
+
+    collisionPointsWith(other: BoxCollider2D): _Math.Point2D[] | undefined {
+        return this._box.vertices.filter((point) => {
+            return other.contains(point);
+        });
+    }
+
+    moveTo(p: _Math.Point2D) {
+        this._box.moveTo(p);
+    }
+
+    get angle(): number {
+        return this.r;
+    }
+
+    set angle(degrees: number) {
+        this.r = degrees;
+        this._rotationMatrix.setAngle(degrees);
+    }
+
+    private _box: AxisAlignedBoundingBox;
+    private _rotationMatrix: _Math.RotationMatrix2D;
 }
 
-export class Collision extends Component {
-    constructor(gameObject: GameObject) {
-        super(gameObject);
+export class CircleCollider2D implements ICollider {
+    constructor(private _center: _Math.Point2D, private _radius: number) {
+
     }
+
+    get center() {
+        return this._center;
+    }
+
+    get radius() {
+        return this._radius;
+    }
+
+    contains(p: _Math.Point2D): boolean {
+        return p.toVector().minus(this.center.toVector()).squareLength < (this._radius * this._radius);
+    }
+
+    touches(p: _Math.Point2D): boolean {
+        return p.toVector().minus(this.center.toVector()).squareLength == (this._radius * this._radius);
+    }
+
+    moveTo(p: _Math.Point2D): void {
+        this._center = p;
+    }
+
+    collisionPointsWith(other: ICollider): _Math.Point2D[] {
+        throw new Error("Method not implemented.");
+    }
+    
 }
 
-export class Collision2D extends Collision {
+export class Collider extends Component {
+    protected readonly _colliders: ICollider[] = [];
+
+    public collisionEnter = new GameEvent<[Collision]>();
+}
+
+export class Collider2D extends Collider {
     constructor(gameObject: GameObject) {
         super(gameObject);
         Object.seal(this);
+
+        this.gameObject.positionChanged.subscribe((position) => {
+            this._updateColliders(position);
+        });
     }
 
-    private readonly _collisionBoxes: BoxCollider2D[] = [];
 
-    addCollisionBox(box: BoxCollider2D) {
-        this._collisionBoxes.push(box);
+    addCollider(collider: ICollider) {
+        this._colliders.push(collider);
     }
 
-    get collisionBoxes() {
-        return this._collisionBoxes;
+    private _updateColliders(position: Position2D) {
+        this._colliders.forEach(collider => {
+            collider.moveTo(position.coords);
+        })
     }
+
+    get colliders() {
+        return this._colliders;
+    }
+}
+
+type Vertices = {
+    lt: _Math.Point2D | _Math.Point3D,
+    rt: _Math.Point2D | _Math.Point3D,
+    lb: _Math.Point2D | _Math.Point3D,
+    rb: _Math.Point2D | _Math.Point3D
+}
+
+export class Collision {
+    other: GameObject;
+    points: _Math.Point2D[] | _Math.Point3D[];
 }
 
 /**

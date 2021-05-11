@@ -238,6 +238,17 @@ var _Math;
     }
     _Math.clamp = clamp;
     /**
+     * Returns one of two numbers that is closer to the given value.
+     * If the differences are equal than `a` is returned.
+     * @param a first number
+     * @param b second number
+     * @param x the value to check
+     */
+    function closer(a, b, x) {
+        return (Math.abs(x - b) < Math.abs(x - a)) ? b : a;
+    }
+    _Math.closer = closer;
+    /**
      * Returns the cosine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
      */

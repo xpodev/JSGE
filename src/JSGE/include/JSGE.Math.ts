@@ -23,27 +23,36 @@ module _Math {
         Repeat
     }
 
-    export const ROTATION_MATRIX = {
-        m11: 0,
-        m12: 0,
-        m21: 0,
-        m22: 0,
+    export class RotationMatrix2D {
+        constructor(
+            private _m11: number = 0,
+            private _m12: number = 0,
+            private _m21: number = 0,
+            private _m22: number = 0
+        ) {
+
+        }
+
         /**
          * 
          * @param r Angle in degrees
          */
-        setAngle: (r: number) => {
-            const rad = radians(r); 
-            ROTATION_MATRIX.m11 = Math.cos(rad);
-            ROTATION_MATRIX.m12 = Math.sin(rad);
-            ROTATION_MATRIX.m21 = Math.sin(-rad);
-            ROTATION_MATRIX.m22 = Math.cos(-rad);
-        },
+        setAngle(r: number): void {
+            const rad = radians(r);
+            this._m11 = Math.cos(rad);
+            this._m12 = Math.sin(rad);
+            this._m21 = Math.sin(-rad);
+            this._m22 = Math.cos(-rad);
+        }
 
-        multiply: (v: Vector2): Vector2 => {
-            const x = v.X * ROTATION_MATRIX.m11 + v.X * ROTATION_MATRIX.m12;
-            const y = v.Y * ROTATION_MATRIX.m21 + v.Y * ROTATION_MATRIX.m22;
-            return new Vector2(x, y);
+        transform(v: Vector2) : Vector2;
+        transform(v: Point2D) : Point2D;
+        transform(v: Vector2 | Point2D): Vector2 | Point2D {
+            const x = v.X * this._m11 + v.X * this._m12;
+            const y = v.Y * this._m21 + v.Y * this._m22;
+            // @ts-expect-error */
+            // ts is stupid. it thinks v.constructor is a Function, which is not constructible (?) so we just tell it that it's stupid and now it shuts up.
+            return new v.constructor(x, y);
         }
     };
 
@@ -106,7 +115,7 @@ module _Math {
         }
     }
 
-    export class Vector2 extends Base2D{
+    export class Vector2 extends Base2D {
 
         static add(a: Vector2, b: Vector2): Vector2 {
             Utilities.areOfType([a, b], Vector2, true);
@@ -179,6 +188,13 @@ module _Math {
             return new Point2D(this.x, this.y);
         }
 
+        get length(): number {
+            return _Math.sqrt(this.squareLength);
+        }
+
+        get squareLength(): number {
+            return this.x * this.x + this.y * this.y;
+        }
     }
 
     export class Vector3 extends Base3D {
@@ -260,6 +276,16 @@ module _Math {
         return x < min ? min : max < x ? max : x;
     }
     /**
+     * Returns one of two numbers that is closer to the given value.
+     * If the differences are equal than `a` is returned.
+     * @param a first number
+     * @param b second number
+     * @param x the value to check
+     */
+    export function closer(a: number, b: number, x: number): number {
+        return (Math.abs(x - b) < Math.abs(x - a)) ? b : a;
+    }
+    /**
      * Returns the cosine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
      */
@@ -270,7 +296,7 @@ module _Math {
      * Converts from radians to degrees.
      * @param radians The angle in radians to convert to degrees.
      */
-     export function degrees(radians: number): number {
+    export function degrees(radians: number): number {
         return radians * 180 / Math.PI;
     }
     /**
@@ -361,7 +387,7 @@ module _Math {
      * Converts from degrees to radians.
      * @param degrees The angle in degrees to convert to radians.
      */
-     export function radians(degrees: number): number {
+    export function radians(degrees: number): number {
         return degrees * Math.PI / 180;
     }
     /**

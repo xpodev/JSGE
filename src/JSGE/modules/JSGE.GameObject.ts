@@ -1,7 +1,10 @@
-import { Collision, Component, IComponent, Position2D } from "./JSGE.Component.js";
+import { Collider, Collider2D, Component, IComponent, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
 import Utilities from "../include/JSGE.Utilities.js";
 import Errors from "../include/JSGE.Errors.js";
+import _Math from "../include/JSGE.Math.js";
+import GameEvent from "../include/JSGE.GameEvent.js";
+import UI from "./JSGE.UI.js";
 
 abstract class GameObject {
     constructor(private _name: string) {
@@ -11,10 +14,10 @@ abstract class GameObject {
     private _parent: GameObject;
     private readonly _children = [];
     private readonly _event = new EventTarget();
-    private _script: HTMLScriptElement;
-    private _scriptStart: Function;
     public readonly components: ComponentsList = {};
     public readonly position = new Position2D(this);
+
+    public positionChanged = new GameEvent<[Position2D]>();
 
     /* #region  Getter/Setter */
     get name() {
@@ -33,9 +36,6 @@ abstract class GameObject {
         return this._event;
     }
 
-    get script() {
-        return this._script;
-    }
     /* #endregion */
 
     abstract draw(ctx: CanvasRenderingContext2D): void;
@@ -53,12 +53,12 @@ abstract class GameObject {
         });
     }
 
-    getComponent(component: IComponent, raiseError = true) {
-        var result = Object.values(this.components).find((c) => {
+    getComponent<T extends Component>(component: IComponent, raiseError = true): T {
+        const result = Object.values(this.components).find((c) => {
             return Utilities.isOfType(c, component);
         });
         if (result) {
-            return result;
+            return result as T;
         }
         if (raiseError) {
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
@@ -66,8 +66,8 @@ abstract class GameObject {
         return null;
     }
 
-    hasComponent(component: IComponent) {
-        return this.getComponent(component, false) !== null;
+    hasComponent<T extends Component>(component?: IComponent) {
+        return this.getComponent<T>(component, false) !== null;
     }
 
     bindKeyPress(targetKey: Inputs.KeyCode, callback: () => {}) {
@@ -96,14 +96,19 @@ abstract class GameObject {
 
     bindMouseClick(callback: (ev: MouseEvent) => any, isMouseOver = true) {
         Inputs.MouseClick.subscribe((event) => {
-            if(isMouseOver) {
-                if(this.hasComponent(Collision)) {
-                    
+            if (isMouseOver) {
+                const collision = this.getComponent<Collider2D>(Collider2D);
+                if (collision) {
+                    if (collision.colliders.some((collider) => {
+                        return collider.contains(new _Math.Point2D(event.clientX, event.clientY));
+                    })) {
+                        callback(event);
+                    }
                 } else {
                     throw new Errors.InvalidOperationError("Detect MouseOver needs collision on the GameObject");
                 }
             } else {
-                callback(event);          
+                callback(event);
             }
         });
     }
@@ -114,12 +119,13 @@ export class Rect extends GameObject {
         super(name);
     }
 
+    public color: UI.Color = UI.Color.black;
     public width: number = 100;
     public height: number = 100;
 
     public draw(ctx: CanvasRenderingContext2D) {
         ctx.moveTo(this.position.x, this.position.y);
-        ctx.fillStyle = "red";
+        ctx.fillStyle = this.color.toHexString();
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }

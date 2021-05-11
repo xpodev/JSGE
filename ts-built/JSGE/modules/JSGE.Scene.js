@@ -1,4 +1,5 @@
 import Input from "../include/JSGE.Input.js";
+import { Collider2D } from "./JSGE.Component.js";
 export var SceneType;
 (function (SceneType) {
     /**
@@ -77,7 +78,26 @@ export class Scene2D extends Scene {
     }
     update() {
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        for (const gObj of this.gameObjects) {
+        const objectWithCollider = this.gameObjects.filter((gameObject) => {
+            return gameObject.hasComponent(Collider2D);
+        });
+        for (const gObj of objectWithCollider) {
+            const fCollider = gObj.getComponent(Collider2D);
+            fCollider.colliders.forEach((collider) => {
+                for (const lpObj of this.gameObjects) {
+                    if (lpObj == gObj) {
+                        continue;
+                    }
+                    const sCollider = lpObj.getComponent(Collider2D);
+                    sCollider.colliders.forEach((otherCollider) => {
+                        const collisionPoint = collider.collisionPointsWith(otherCollider);
+                        if (collisionPoint.length) {
+                            fCollider.collisionEnter.invoke({ other: lpObj, points: collisionPoint });
+                            sCollider.collisionEnter.invoke({ other: gObj, points: collisionPoint });
+                        }
+                    });
+                }
+            });
             gObj.draw(this._context);
         }
     }

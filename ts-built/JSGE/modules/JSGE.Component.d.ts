@@ -1,5 +1,6 @@
 import GameObject from "./JSGE.GameObject.js";
 import _Math from "../include/JSGE.Math.js";
+import GameEvent from "../include/JSGE.GameEvent.js";
 export declare class Component {
     constructor(gameObject: GameObject);
     private _gameObject;
@@ -31,26 +32,42 @@ export declare class Position2D extends Component {
     set x(x: number);
     get y(): number;
     set y(y: number);
-    get coords(): _Math.Vector2;
+    get coords(): _Math.Point2D;
     get enabled(): any;
     set enabled(v: any);
 }
-export declare class BoxCollider2D {
+interface ICollider {
+    contains(p: _Math.Point2D | _Math.Point3D): boolean;
+    touches(p: _Math.Point2D | _Math.Point3D): boolean;
+    moveTo(p: _Math.Point2D | _Math.Point3D): void;
+    collisionPointsWith(other: ICollider): _Math.Point2D[] | _Math.Point3D[] | undefined;
+}
+export declare class BoxCollider2D implements ICollider {
     x: number;
     y: number;
     r: number;
     w: number;
     h: number;
     constructor(x: number, y: number, r: number, w: number, h: number);
-    private _L;
-    checkPoint(x: number, y: number): void;
+    contains(p: _Math.Point2D): boolean;
+    touches(p: _Math.Point2D): boolean;
+    collisionPointsWith(other: BoxCollider2D): _Math.Point2D[] | undefined;
+    moveTo(p: _Math.Point2D): void;
+    private _box;
 }
-export declare class Collision extends Component {
+export declare class Collider extends Component {
     constructor(gameObject: GameObject);
+    protected readonly _colliders: ICollider[];
+    collisionEnter: GameEvent<[Collision]>;
 }
-export declare class Collision2D extends Collision {
+export declare class Collider2D extends Collider {
     constructor(gameObject: GameObject);
-    private readonly _collisionBoxes;
-    addCollisionBox(box: BoxCollider2D): void;
-    get collisionBoxes(): BoxCollider2D[];
+    addCollider(collider: ICollider): void;
+    private _updateColliders;
+    get colliders(): ICollider[];
 }
+export declare class Collision {
+    other: GameObject;
+    points: _Math.Point2D[] | _Math.Point3D[];
+}
+export {};

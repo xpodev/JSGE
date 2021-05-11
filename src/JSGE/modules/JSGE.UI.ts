@@ -10,8 +10,8 @@ module UI {
 
         constructor(color: Color);
         constructor(hex_string: string);
-        constructor(r: number, g: number, b: number, a: number | void);
-        constructor(r: number | Color | string, g: number | void, b: number | void, a: number | void) {
+        constructor(r: number, g: number, b: number, a?: number);
+        constructor(r: number | Color | string, g: number | void, b: number | void, a: number = 1) {
             if (typeof r === "string") {
                 this.validate(r)
             } else if (Utilities.areOfType([r, g, b, a], Number)) {
@@ -103,10 +103,18 @@ module UI {
                 this._r = parseInt(hexParts[1], 16);
                 this._g = parseInt(hexParts[2], 16);
                 this._b = parseInt(hexParts[3], 16);
-                this._a = parseInt(hexParts[4], 16);
+                this._a = parseInt(hexParts[4], 16) / 255;
             } else {
                 throw new TypeError(`'${strColor}' is not a valid color.`);
             }
+        }
+
+        toHexString() {
+            return `#${this._r.toString(16)}${this._g.toString(16)}${this._b.toString(16)}${(this._a * 255).toString(16)}`;
+        }
+
+        toString() {
+            return this.toHexString();
         }
     }
 }

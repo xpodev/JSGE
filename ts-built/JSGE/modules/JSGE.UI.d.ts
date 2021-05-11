@@ -6,7 +6,7 @@ declare module UI {
         private _a;
         constructor(color: Color);
         constructor(hex_string: string);
-        constructor(r: number, g: number, b: number, a: number | void);
+        constructor(r: number, g: number, b: number, a?: number);
         get a(): number;
         set a(value: number);
         get r(): number;
@@ -24,6 +24,8 @@ declare module UI {
         static get yellow(): Color;
         static get white(): Color;
         private validate;
+        toHex(): string;
+        toString(): string;
     }
 }
 export default UI;

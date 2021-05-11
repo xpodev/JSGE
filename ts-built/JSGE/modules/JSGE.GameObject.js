@@ -1,7 +1,10 @@
-import { Collision, Position2D } from "./JSGE.Component.js";
+import { Collider2D, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
 import Utilities from "../include/JSGE.Utilities.js";
 import Errors from "../include/JSGE.Errors.js";
+import _Math from "../include/JSGE.Math.js";
+import GameEvent from "../include/JSGE.GameEvent.js";
+import UI from "./JSGE.UI.js";
 class GameObject {
     constructor(_name) {
         this._name = _name;
@@ -9,6 +12,7 @@ class GameObject {
         this._event = new EventTarget();
         this.components = {};
         this.position = new Position2D(this);
+        this.positionChanged = new GameEvent();
     }
     /* #region  Getter/Setter */
     get name() {
@@ -23,9 +27,6 @@ class GameObject {
     get event() {
         return this._event;
     }
-    get script() {
-        return this._script;
-    }
     forAllChildren(func) {
         for (const gObj of this.children) {
             func(gObj);
@@ -38,7 +39,7 @@ class GameObject {
         });
     }
     getComponent(component, raiseError = true) {
-        var result = Object.values(this.components).find((c) => {
+        const result = Object.values(this.components).find((c) => {
             return Utilities.isOfType(c, component);
         });
         if (result) {
@@ -76,7 +77,13 @@ class GameObject {
     bindMouseClick(callback, isMouseOver = true) {
         Inputs.MouseClick.subscribe((event) => {
             if (isMouseOver) {
-                if (this.hasComponent(Collision)) {
+                const collision = this.getComponent(Collider2D);
+                if (collision) {
+                    if (collision.colliders.some((collider) => {
+                        return collider.contains(new _Math.Point2D(event.clientX, event.clientY));
+                    })) {
+                        callback(event);
+                    }
                 }
                 else {
                     throw new Errors.InvalidOperationError("Detect MouseOver needs collision on the GameObject");
@@ -91,12 +98,13 @@ class GameObject {
 export class Rect extends GameObject {
     constructor(name) {
         super(name);
+        this.color = UI.Color.black;
         this.width = 100;
         this.height = 100;
     }
     draw(ctx) {
         ctx.moveTo(this.position.x, this.position.y);
-        ctx.fillStyle = "red";
+        ctx.fillStyle = this.color.toHex();
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }

@@ -105,6 +105,14 @@ declare module _Math {
      */
     export function clamp(x: number, min: number, max: number): number;
     /**
+     * Returns one of two numbers that is closer to the given value.
+     * If the differences are equal than `a` is returned.
+     * @param a first number
+     * @param b second number
+     * @param x the value to check
+     */
+    export function closer(a: number, b: number, x: number): number;
+    /**
      * Returns the cosine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
      */

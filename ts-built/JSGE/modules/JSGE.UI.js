@@ -3,7 +3,7 @@ import Utilities from '../include/JSGE.Utilities.js';
 var UI;
 (function (UI) {
     class Color {
-        constructor(r, g, b, a) {
+        constructor(r, g, b, a = 1) {
             if (typeof r === "string") {
                 this.validate(r);
             }
@@ -81,11 +81,17 @@ var UI;
                 this._r = parseInt(hexParts[1], 16);
                 this._g = parseInt(hexParts[2], 16);
                 this._b = parseInt(hexParts[3], 16);
-                this._a = parseInt(hexParts[4], 16);
+                this._a = parseInt(hexParts[4], 16) / 255;
             }
             else {
                 throw new TypeError(`'${strColor}' is not a valid color.`);
             }
+        }
+        toHex() {
+            return `#${this._r.toString(16)}${this._g.toString(16)}${this._b.toString(16)}${(this._a * 255).toString(16)}`;
+        }
+        toString() {
+            return this.toHex();
         }
     }
     UI.Color = Color;
