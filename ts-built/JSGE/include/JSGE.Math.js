@@ -22,28 +22,34 @@ var _Math;
         LerpMode[LerpMode["UnClamped"] = 1] = "UnClamped";
         LerpMode[LerpMode["Repeat"] = 2] = "Repeat";
     })(LerpMode = _Math.LerpMode || (_Math.LerpMode = {}));
-    _Math.ROTATION_MATRIX = {
-        m11: 0,
-        m12: 0,
-        m21: 0,
-        m22: 0,
+    class RotationMatrix2D {
+        constructor(_m11 = 0, _m12 = 0, _m21 = 0, _m22 = 0) {
+            this._m11 = _m11;
+            this._m12 = _m12;
+            this._m21 = _m21;
+            this._m22 = _m22;
+        }
         /**
          *
          * @param r Angle in degrees
          */
-        setAngle: (r) => {
+        setAngle(r) {
             const rad = radians(r);
-            _Math.ROTATION_MATRIX.m11 = Math.cos(rad);
-            _Math.ROTATION_MATRIX.m12 = Math.sin(rad);
-            _Math.ROTATION_MATRIX.m21 = Math.sin(-rad);
-            _Math.ROTATION_MATRIX.m22 = Math.cos(-rad);
-        },
-        multiply: (v) => {
-            const x = v.X * _Math.ROTATION_MATRIX.m11 + v.X * _Math.ROTATION_MATRIX.m12;
-            const y = v.Y * _Math.ROTATION_MATRIX.m21 + v.Y * _Math.ROTATION_MATRIX.m22;
-            return new Vector2(x, y);
+            this._m11 = Math.cos(rad);
+            this._m12 = Math.sin(rad);
+            this._m21 = Math.sin(-rad);
+            this._m22 = Math.cos(-rad);
         }
-    };
+        transform(v) {
+            const x = v.X * this._m11 + v.X * this._m12;
+            const y = v.Y * this._m21 + v.Y * this._m22;
+            // @ts-expect-error */
+            // ts is stupid. it thinks v.constructor is a Function, which is not constructible (?) so we just tell it that it's stupid and now it shuts up.
+            return new v.constructor(x, y);
+        }
+    }
+    _Math.RotationMatrix2D = RotationMatrix2D;
+    ;
     class Base2D {
         constructor(x = 0, y = 0) {
             this.x = x;
@@ -150,6 +156,12 @@ var _Math;
         }
         toPoint() {
             return new Point2D(this.x, this.y);
+        }
+        get length() {
+            return _Math.sqrt(this.squareLength);
+        }
+        get squareLength() {
+            return this.x * this.x + this.y * this.y;
         }
     }
     _Math.Vector2 = Vector2;

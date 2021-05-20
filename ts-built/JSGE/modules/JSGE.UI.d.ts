@@ -24,7 +24,7 @@ declare module UI {
         static get yellow(): Color;
         static get white(): Color;
         private validate;
-        toHex(): string;
+        toHexString(): string;
         toString(): string;
     }
 }

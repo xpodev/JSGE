@@ -10,9 +10,6 @@ export declare class Component {
     enable(v?: boolean): void;
     get enabled(): boolean;
 }
-export interface IComponent {
-    new (gameObject: GameObject): Component;
-}
 export declare class Position2D extends Component {
     /** @param {Number} x  The object's location on the X-axis */
     private _x;
@@ -53,12 +50,30 @@ export declare class BoxCollider2D implements ICollider {
     touches(p: _Math.Point2D): boolean;
     collisionPointsWith(other: BoxCollider2D): _Math.Point2D[] | undefined;
     moveTo(p: _Math.Point2D): void;
+    get angle(): number;
+    set angle(degrees: number);
     private _box;
+    private _rotationMatrix;
+}
+export declare class CircleCollider2D implements ICollider {
+    private _center;
+    private _radius;
+    constructor(_center: _Math.Point2D, _radius: number);
+    get center(): _Math.Point2D;
+    get radius(): number;
+    contains(p: _Math.Point2D): boolean;
+    touches(p: _Math.Point2D): boolean;
+    moveTo(p: _Math.Point2D): void;
+    collisionPointsWith(other: ICollider): _Math.Point2D[];
 }
 export declare class Collider extends Component {
-    constructor(gameObject: GameObject);
     protected readonly _colliders: ICollider[];
-    collisionEnter: GameEvent<[Collision]>;
+    collisionOverlap: GameEvent<[Collision]>;
+    collisionBegin: GameEvent<[Collision]>;
+    collisionEnd: GameEvent<[Collision]>;
+    private _isColliding;
+    get isColliding(): boolean;
+    set isColliding(v: boolean);
 }
 export declare class Collider2D extends Collider {
     constructor(gameObject: GameObject);
@@ -69,5 +84,6 @@ export declare class Collider2D extends Collider {
 export declare class Collision {
     other: GameObject;
     points: _Math.Point2D[] | _Math.Point3D[];
+    collider: ICollider;
 }
 export {};

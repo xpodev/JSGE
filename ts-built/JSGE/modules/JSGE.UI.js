@@ -87,11 +87,11 @@ var UI;
                 throw new TypeError(`'${strColor}' is not a valid color.`);
             }
         }
-        toHex() {
-            return `#${this._r.toString(16)}${this._g.toString(16)}${this._b.toString(16)}${(this._a * 255).toString(16)}`;
+        toHexString() {
+            return `#${this._r.toString(16).padStart(2, '0')}${this._g.toString(16).padStart(2, '0')}${this._b.toString(16).padStart(2, '0')}${(this._a * 255).toString(16).padStart(2, '0')}`;
         }
         toString() {
-            return this.toHex();
+            return this.toHexString();
         }
     }
     UI.Color = Color;

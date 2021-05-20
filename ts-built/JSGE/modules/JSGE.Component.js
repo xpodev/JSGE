@@ -176,12 +176,14 @@ export class BoxCollider2D {
         this.w = w;
         this.h = h;
         this._box = new AxisAlignedBoundingBox(new _Math.Point2D(x, y), w, h);
+        this._rotationMatrix = new _Math.RotationMatrix2D();
+        this.angle = r;
     }
     contains(p) {
-        return this._box.contains(p);
+        return this._box.contains(this._rotationMatrix.transform(p));
     }
     touches(p) {
-        return this._box.touches(p);
+        return this._box.touches(this._rotationMatrix.transform(p));
     }
     collisionPointsWith(other) {
         return this._box.vertices.filter((point) => {
@@ -191,12 +193,52 @@ export class BoxCollider2D {
     moveTo(p) {
         this._box.moveTo(p);
     }
+    get angle() {
+        return this.r;
+    }
+    set angle(degrees) {
+        this.r = degrees;
+        this._rotationMatrix.setAngle(degrees);
+    }
+}
+export class CircleCollider2D {
+    constructor(_center, _radius) {
+        this._center = _center;
+        this._radius = _radius;
+    }
+    get center() {
+        return this._center;
+    }
+    get radius() {
+        return this._radius;
+    }
+    contains(p) {
+        return p.toVector().minus(this.center.toVector()).squareLength < (this._radius * this._radius);
+    }
+    touches(p) {
+        return p.toVector().minus(this.center.toVector()).squareLength == (this._radius * this._radius);
+    }
+    moveTo(p) {
+        this._center = p;
+    }
+    collisionPointsWith(other) {
+        throw new Error("Method not implemented.");
+    }
 }
 export class Collider extends Component {
-    constructor(gameObject) {
-        super(gameObject);
+    constructor() {
+        super(...arguments);
         this._colliders = [];
-        this.collisionEnter = new GameEvent();
+        this.collisionOverlap = new GameEvent();
+        this.collisionBegin = new GameEvent();
+        this.collisionEnd = new GameEvent();
+        this._isColliding = false;
+    }
+    get isColliding() {
+        return this._isColliding;
+    }
+    set isColliding(v) {
+        this._isColliding = v;
     }
 }
 export class Collider2D extends Collider {

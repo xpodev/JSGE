@@ -1,7 +1,7 @@
 module Utilities {
     class BaseElement extends HTMLElement { }
 
-    export function areOfType(obj: any[], cls: any, raiseError: boolean = false): boolean {
+    export function areOfType<T>(obj: any[], cls: Interface<T>, raiseError: boolean = false): boolean {
         for (const value of obj) {
             if (value instanceof cls || value.prototype instanceof cls || toString.call(value) == '[object ' + cls.name + ']') {
 
@@ -14,7 +14,7 @@ module Utilities {
         return true;
     }
 
-    export function isOfType(obj: any, cls: any, raiseError: boolean = false): boolean {
+    export function isOfType<T>(obj: any, cls: Interface<T>, raiseError: boolean = false): boolean {
         if (obj instanceof cls || obj.prototype instanceof cls || toString.call(obj) == '[object ' + cls.name + ']') {
             return true;
         } else if (raiseError) {
@@ -35,6 +35,8 @@ module Utilities {
         }
         customElements.define(tagName.toLowerCase(), elementClass);
     }
+
+    export type Interface<T> = { new(...args: any[]): T };
 }
 
 export default Utilities;

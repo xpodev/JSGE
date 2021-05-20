@@ -1,4 +1,4 @@
-import { Collider, Collider2D, Component, IComponent, Position2D } from "./JSGE.Component.js";
+import { Collider2D, Component, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
 import Utilities from "../include/JSGE.Utilities.js";
 import Errors from "../include/JSGE.Errors.js";
@@ -46,14 +46,14 @@ abstract class GameObject {
         }
     }
 
-    addComponent(component: IComponent) {
+    addComponent(component: Utilities.Interface<Component>) {
         this.components[component.constructor.name] = new component(this);
         Object.defineProperty(this, component.name, {
             get: () => { return this.components[component.name]; }
         });
     }
 
-    getComponent<T extends Component>(component: IComponent, raiseError = true): T {
+    getComponent<T extends Component>(component: Utilities.Interface<T>, raiseError: boolean = true): T {
         const result = Object.values(this.components).find((c) => {
             return Utilities.isOfType(c, component);
         });
@@ -61,13 +61,14 @@ abstract class GameObject {
             return result as T;
         }
         if (raiseError) {
+            component = component as Utilities.Interface<T>;
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
         }
         return null;
     }
 
-    hasComponent<T extends Component>(component?: IComponent) {
-        return this.getComponent<T>(component, false) !== null;
+    hasComponent<T extends Component>(component: Utilities.Interface<T>) {
+        return this.getComponent<T>(component, false) != null;
     }
 
     bindKeyPress(targetKey: Inputs.KeyCode, callback: () => {}) {
@@ -97,7 +98,7 @@ abstract class GameObject {
     bindMouseClick(callback: (ev: MouseEvent) => any, isMouseOver = true) {
         Inputs.MouseClick.subscribe((event) => {
             if (isMouseOver) {
-                const collision = this.getComponent<Collider2D>(Collider2D);
+                const collision = this.getComponent(Collider2D);
                 if (collision) {
                     if (collision.colliders.some((collider) => {
                         return collider.contains(new _Math.Point2D(event.clientX, event.clientY));
@@ -140,4 +141,14 @@ export default GameObject;
 
 type ComponentsList = {
     [key: string]: Component
+}
+
+class Factory<T> {
+    constructor(private f: T) {
+
+    }
+
+    make(): T {
+        return this.f;
+    }
 }

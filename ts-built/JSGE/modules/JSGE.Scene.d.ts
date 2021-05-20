@@ -35,6 +35,7 @@ declare abstract class Scene {
     forAllObjects(func: (gObj: GameObject) => any): void;
     deactivate(): void;
     addGameObject(gameObject: GameObject): void;
+    removeGameObject(gameObject: GameObject): void;
     abstract update(): void;
 }
 export declare class Scene2D extends Scene {

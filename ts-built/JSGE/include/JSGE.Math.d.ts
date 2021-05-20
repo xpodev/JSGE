@@ -4,18 +4,20 @@ declare module _Math {
         UnClamped = 1,
         Repeat = 2
     }
-    export const ROTATION_MATRIX: {
-        m11: number;
-        m12: number;
-        m21: number;
-        m22: number;
+    export class RotationMatrix2D {
+        private _m11;
+        private _m12;
+        private _m21;
+        private _m22;
+        constructor(_m11?: number, _m12?: number, _m21?: number, _m22?: number);
         /**
          *
          * @param r Angle in degrees
          */
-        setAngle: (r: number) => void;
-        multiply: (v: Vector2) => Vector2;
-    };
+        setAngle(r: number): void;
+        transform(v: Vector2): Vector2;
+        transform(v: Point2D): Point2D;
+    }
     class Base2D {
         protected x: number;
         protected y: number;
@@ -50,6 +52,8 @@ declare module _Math {
         static dot(a: Vector2, b: Vector2): number;
         dot(a: Vector2): number;
         toPoint(): Point2D;
+        get length(): number;
+        get squareLength(): number;
     }
     export class Vector3 extends Base3D {
         toPoint(): Point3D;

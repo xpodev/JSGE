@@ -29,10 +29,6 @@ export class Component {
     }
 }
 
-export interface IComponent {
-    new(gameObject: GameObject): Component;
-}
-
 export class Position2D extends Component {
     /** @param {Number} x  The object's location on the X-axis */
     private _x: number = 0;
@@ -296,13 +292,24 @@ export class CircleCollider2D implements ICollider {
     collisionPointsWith(other: ICollider): _Math.Point2D[] {
         throw new Error("Method not implemented.");
     }
-    
+
 }
 
 export class Collider extends Component {
     protected readonly _colliders: ICollider[] = [];
 
-    public collisionEnter = new GameEvent<[Collision]>();
+    public collisionOverlap = new GameEvent<[Collision]>();
+    public collisionBegin = new GameEvent<[Collision]>();
+    public collisionEnd = new GameEvent<[Collision]>();
+    private _isColliding: boolean = false;
+
+    get isColliding(): boolean {
+        return this._isColliding
+    }
+
+    set isColliding(v: boolean) {
+        this._isColliding = v;
+    }
 }
 
 export class Collider2D extends Collider {
@@ -341,6 +348,7 @@ type Vertices = {
 export class Collision {
     other: GameObject;
     points: _Math.Point2D[] | _Math.Point3D[];
+    collider: ICollider;
 }
 
 /**

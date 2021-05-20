@@ -46,12 +46,13 @@ class GameObject {
             return result;
         }
         if (raiseError) {
+            component = component;
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
         }
         return null;
     }
     hasComponent(component) {
-        return this.getComponent(component, false) !== null;
+        return this.getComponent(component, false) != null;
     }
     bindKeyPress(targetKey, callback) {
         Inputs.KeyPressed.subscribe((key) => {
@@ -104,7 +105,7 @@ export class Rect extends GameObject {
     }
     draw(ctx) {
         ctx.moveTo(this.position.x, this.position.y);
-        ctx.fillStyle = this.color.toHex();
+        ctx.fillStyle = this.color.toHexString();
         ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }
@@ -113,3 +114,11 @@ export class NullObject extends GameObject {
     }
 }
 export default GameObject;
+class Factory {
+    constructor(f) {
+        this.f = f;
+    }
+    make() {
+        return this.f;
+    }
+}

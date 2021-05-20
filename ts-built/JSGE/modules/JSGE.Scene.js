@@ -1,5 +1,6 @@
 import Input from "../include/JSGE.Input.js";
 import { Collider2D } from "./JSGE.Component.js";
+import Config from "../include/JSGE.Config.js";
 export var SceneType;
 (function (SceneType) {
     /**
@@ -55,7 +56,7 @@ class Scene {
         document.body.append(this._canvas);
         this._updateInterval = setInterval(() => {
             this.update();
-        }, 1000 / 60);
+        }, 1000 / Config.MAX_FPS);
     }
     forAllObjects(func) {
         for (const gObj of this.gameObjects) {
@@ -70,6 +71,12 @@ class Scene {
     addGameObject(gameObject) {
         this.gameObjects.push(gameObject);
     }
+    removeGameObject(gameObject) {
+        const index = this.gameObjects.indexOf(gameObject);
+        if (index >= 0) {
+            this.gameObjects.splice(index, 1);
+        }
+    }
 }
 export class Scene2D extends Scene {
     constructor(sceneName) {
@@ -81,23 +88,34 @@ export class Scene2D extends Scene {
         const objectWithCollider = this.gameObjects.filter((gameObject) => {
             return gameObject.hasComponent(Collider2D);
         });
-        for (const gObj of objectWithCollider) {
-            const fCollider = gObj.getComponent(Collider2D);
-            fCollider.colliders.forEach((collider) => {
-                for (const lpObj of this.gameObjects) {
-                    if (lpObj == gObj) {
+        for (const firstObject of objectWithCollider) {
+            const firstCollider = firstObject.getComponent(Collider2D);
+            firstCollider.colliders.forEach((collider) => {
+                for (const secondObject of objectWithCollider) {
+                    if (secondObject == firstObject) {
                         continue;
                     }
-                    const sCollider = lpObj.getComponent(Collider2D);
-                    sCollider.colliders.forEach((otherCollider) => {
+                    const secondCollider = secondObject.getComponent(Collider2D);
+                    secondCollider.colliders.forEach((otherCollider) => {
                         const collisionPoint = collider.collisionPointsWith(otherCollider);
                         if (collisionPoint.length) {
-                            fCollider.collisionEnter.invoke({ other: lpObj, points: collisionPoint });
-                            sCollider.collisionEnter.invoke({ other: gObj, points: collisionPoint });
+                            if (!firstCollider.isColliding) {
+                                firstCollider.collisionBegin.invoke({ other: secondObject, points: collisionPoint, collider: collider });
+                                firstCollider.isColliding = true;
+                            }
+                            firstCollider.collisionOverlap.invoke({ other: secondObject, points: collisionPoint, collider: collider });
+                        }
+                        else {
+                            if (firstCollider.isColliding) {
+                                firstCollider.collisionEnd.invoke({ other: secondObject, points: collisionPoint, collider: collider });
+                                firstCollider.isColliding = false;
+                            }
                         }
                     });
                 }
             });
+        }
+        for (const gObj of this.gameObjects) {
             gObj.draw(this._context);
         }
     }

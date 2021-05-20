@@ -1,5 +1,6 @@
-import { Component, IComponent, Position2D } from "./JSGE.Component.js";
+import { Component, Position2D } from "./JSGE.Component.js";
 import Inputs from "../include/JSGE.Input.js";
+import Utilities from "../include/JSGE.Utilities.js";
 import GameEvent from "../include/JSGE.GameEvent.js";
 import UI from "./JSGE.UI.js";
 declare abstract class GameObject {
@@ -17,9 +18,9 @@ declare abstract class GameObject {
     get event(): EventTarget;
     abstract draw(ctx: CanvasRenderingContext2D): void;
     forAllChildren(func: (gObj: GameObject) => any): void;
-    addComponent(component: IComponent): void;
-    getComponent<T extends Component>(component: IComponent, raiseError?: boolean): T;
-    hasComponent<T extends Component>(component?: IComponent): boolean;
+    addComponent(component: Utilities.Interface<Component>): void;
+    getComponent<T extends Component>(component: Utilities.Interface<T>, raiseError?: boolean): T;
+    hasComponent<T extends Component>(component: Utilities.Interface<T>): boolean;
     bindKeyPress(targetKey: Inputs.KeyCode, callback: () => {}): void;
     bindKeyDown(targetKey: string, callback: Function): void;
     bindKeyUp(targetKey: string, callback: Function): void;
