@@ -30,6 +30,7 @@ class Scene {
         this.sceneName = sceneName;
         this.sceneType = sceneType;
         this.gameObjects = [];
+        this._updateLoopDone = true;
         this._canvas = document.createElement("canvas");
         this._canvas.width = window.innerWidth;
         this._canvas.height = window.innerHeight;
@@ -55,7 +56,11 @@ class Scene {
         });
         document.body.append(this._canvas);
         this._updateInterval = setInterval(() => {
-            this.update();
+            if (this._updateLoopDone) {
+                this._updateLoopDone = false;
+                this.update();
+                this._updateLoopDone = true;
+            }
         }, 1000 / Config.MAX_FPS);
     }
     forAllObjects(func) {

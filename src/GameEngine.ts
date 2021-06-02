@@ -9,11 +9,20 @@ export { default as UI } from "./JSGE/modules/JSGE.UI.js";
 export { default as GameObject } from "./JSGE/modules/JSGE.GameObject.js";
 export { Scene2D, Scene3D } from "./JSGE/modules/JSGE.Scene.js";
 
+export { Rect } from "./JSGE/modules/JSGE.GameObject.js";
+export { Position2D } from './JSGE/modules/JSGE.Component.js';
+
+import * as WgEngine from './GameEngine.js';
+export const DEFAULT_SCENE = new Scene2D("Scene1");
+
+for (const obj in WgEngine) {
+    window[obj] = WgEngine[obj];
+}
+
 document.querySelector('html').style.height = "100%";
 document.querySelector('html').style.margin = "0";
 document.body.style.height = "100%";
 document.body.style.margin = "0";
 
-export const DEFAULT_SCENE = new Scene2D("Scene1");
 
 DEFAULT_SCENE.activate();

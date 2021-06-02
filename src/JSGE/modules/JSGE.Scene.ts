@@ -37,6 +37,7 @@ abstract class Scene {
     protected readonly _canvas: HTMLCanvasElement;
     protected readonly abstract _context: Context;
     public readonly gameObjects: GameObject[] = [];
+    private _updateLoopDone = true;
 
     public get name(): string {
         return this.sceneName;
@@ -65,7 +66,11 @@ abstract class Scene {
 
         document.body.append(this._canvas);
         this._updateInterval = setInterval(() => {
-            this.update();
+            if (this._updateLoopDone) {
+                this._updateLoopDone = false;
+                this.update();
+                this._updateLoopDone = true;
+            }
         }, 1000 / Config.MAX_FPS);
     }
 

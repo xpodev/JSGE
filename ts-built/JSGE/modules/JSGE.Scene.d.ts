@@ -29,6 +29,7 @@ declare abstract class Scene {
     protected readonly _canvas: HTMLCanvasElement;
     protected readonly abstract _context: Context;
     readonly gameObjects: GameObject[];
+    private _updateLoopDone;
     get name(): string;
     get type(): SceneType;
     activate(): void;

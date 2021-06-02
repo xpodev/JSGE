@@ -16,7 +16,7 @@ abstract class GameObject {
     private readonly _children = [];
     private readonly _event = new EventTarget();
     public readonly components: ComponentsList = {};
-    public readonly position = new Position2D(this);
+    public readonly position: Position2D;
 
     public positionChanged = new GameEvent<[Position2D]>();
 

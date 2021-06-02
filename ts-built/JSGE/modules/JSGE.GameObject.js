@@ -11,8 +11,9 @@ class GameObject {
         this._children = [];
         this._event = new EventTarget();
         this.components = {};
-        this.position = new Position2D(this);
         this.positionChanged = new GameEvent();
+        this.addComponent(Position2D);
+        this.position = this.getComponent(Position2D);
     }
     /* #region  Getter/Setter */
     get name() {
@@ -127,11 +128,3 @@ export class NullObject extends GameObject {
     }
 }
 export default GameObject;
-class Factory {
-    constructor(f) {
-        this.f = f;
-    }
-    make() {
-        return this.f;
-    }
-}

@@ -6,4 +6,6 @@ export { default as Input } from "./JSGE/include/JSGE.Input.js";
 export { default as UI } from "./JSGE/modules/JSGE.UI.js";
 export { default as GameObject } from "./JSGE/modules/JSGE.GameObject.js";
 export { Scene2D, Scene3D } from "./JSGE/modules/JSGE.Scene.js";
+export { Rect } from "./JSGE/modules/JSGE.GameObject.js";
+export { Position2D } from './JSGE/modules/JSGE.Component.js';
 export declare const DEFAULT_SCENE: Scene2D;
