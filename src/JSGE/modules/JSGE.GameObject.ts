@@ -8,7 +8,8 @@ import UI from "./JSGE.UI.js";
 
 abstract class GameObject {
     constructor(private _name: string) {
-
+        this.addComponent(Position2D);
+        this.position = this.getComponent(Position2D);
     }
 
     private _parent: GameObject;
@@ -46,14 +47,14 @@ abstract class GameObject {
         }
     }
 
-    addComponent(component: Utilities.Interface<Component>) {
+    addComponent(component: Utilities.Constructor<Component>) {
         this.components[component.constructor.name] = new component(this);
         Object.defineProperty(this, component.name, {
             get: () => { return this.components[component.name]; }
         });
     }
 
-    getComponent<T extends Component>(component: Utilities.Interface<T>, raiseError: boolean = true): T {
+    getComponent<T extends Component>(component: Utilities.Constructor<T>, raiseError: boolean = true): T {
         const result = Object.values(this.components).find((c) => {
             return Utilities.isOfType(c, component);
         });
@@ -61,13 +62,27 @@ abstract class GameObject {
             return result as T;
         }
         if (raiseError) {
-            component = component as Utilities.Interface<T>;
+            component = component as Utilities.Constructor<T>;
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
         }
         return null;
     }
 
-    hasComponent<T extends Component>(component: Utilities.Interface<T>) {
+    getComponents<T extends Component>(component: Utilities.Constructor<T>, raiseError: boolean = true): T[] {
+        const result = Object.values(this.components).filter((c) => {
+            return Utilities.isOfType(c, component);
+        });
+        if (result) {
+            return result as T[];
+        }
+        if (raiseError) {
+            component = component as Utilities.Constructor<T>;
+            throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
+        }
+        return null;
+    }
+
+    hasComponent<T extends Component>(component: Utilities.Constructor<T>) {
         return this.getComponent<T>(component, false) != null;
     }
 
@@ -141,14 +156,4 @@ export default GameObject;
 
 type ComponentsList = {
     [key: string]: Component
-}
-
-class Factory<T> {
-    constructor(private f: T) {
-
-    }
-
-    make(): T {
-        return this.f;
-    }
 }

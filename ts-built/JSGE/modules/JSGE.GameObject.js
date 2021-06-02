@@ -51,6 +51,19 @@ class GameObject {
         }
         return null;
     }
+    getComponents(component, raiseError = true) {
+        const result = Object.values(this.components).filter((c) => {
+            return Utilities.isOfType(c, component);
+        });
+        if (result) {
+            return result;
+        }
+        if (raiseError) {
+            component = component;
+            throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
+        }
+        return null;
+    }
     hasComponent(component) {
         return this.getComponent(component, false) != null;
     }

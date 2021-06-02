@@ -18,9 +18,10 @@ declare abstract class GameObject {
     get event(): EventTarget;
     abstract draw(ctx: CanvasRenderingContext2D): void;
     forAllChildren(func: (gObj: GameObject) => any): void;
-    addComponent(component: Utilities.Interface<Component>): void;
-    getComponent<T extends Component>(component: Utilities.Interface<T>, raiseError?: boolean): T;
-    hasComponent<T extends Component>(component: Utilities.Interface<T>): boolean;
+    addComponent(component: Utilities.Constructor<Component>): void;
+    getComponent<T extends Component>(component: Utilities.Constructor<T>, raiseError?: boolean): T;
+    getComponents<T extends Component>(component: Utilities.Constructor<T>, raiseError?: boolean): T[];
+    hasComponent<T extends Component>(component: Utilities.Constructor<T>): boolean;
     bindKeyPress(targetKey: Inputs.KeyCode, callback: () => {}): void;
     bindKeyDown(targetKey: string, callback: Function): void;
     bindKeyUp(targetKey: string, callback: Function): void;
