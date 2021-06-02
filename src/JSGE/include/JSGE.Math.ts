@@ -45,8 +45,8 @@ module _Math {
             this._m22 = Math.cos(-rad);
         }
 
-        transform(v: Vector2) : Vector2;
-        transform(v: Point2D) : Point2D;
+        transform(v: Vector2): Vector2;
+        transform(v: Point2D): Point2D;
         transform(v: Vector2 | Point2D): Vector2 | Point2D {
             const x = v.X * this._m11 + v.X * this._m12;
             const y = v.Y * this._m21 + v.Y * this._m22;
@@ -276,14 +276,21 @@ module _Math {
         return x < min ? min : max < x ? max : x;
     }
     /**
-     * Returns one of two numbers that is closer to the given value.
-     * If the differences are equal than `a` is returned.
-     * @param a first number
-     * @param b second number
+     * The closest value in an array to the given number.
      * @param x the value to check
+     * @param values the values to find the closest from
      */
-    export function closer(a: number, b: number, x: number): number {
-        return (Math.abs(x - b) < Math.abs(x - a)) ? b : a;
+    export function closest(x: number, values: number[]): number {
+        let minDistance = Infinity;
+        let index: number;
+        values.forEach((v, i) => {
+            const d = Math.abs(v - x);
+            if (d < minDistance) {
+                minDistance = d;
+                index = i;
+            }
+        });
+        return values[index];
     }
     /**
      * Returns the cosine of a number.

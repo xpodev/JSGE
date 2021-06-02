@@ -250,16 +250,23 @@ var _Math;
     }
     _Math.clamp = clamp;
     /**
-     * Returns one of two numbers that is closer to the given value.
-     * If the differences are equal than `a` is returned.
-     * @param a first number
-     * @param b second number
+     * The closest value in an array to the given number.
      * @param x the value to check
+     * @param values the values to find the closest from
      */
-    function closer(a, b, x) {
-        return (Math.abs(x - b) < Math.abs(x - a)) ? b : a;
+    function closest(x, values) {
+        let minDistance = Infinity;
+        let index;
+        values.forEach((v, i) => {
+            const d = Math.abs(v - x);
+            if (d < minDistance) {
+                minDistance = d;
+                index = i;
+            }
+        });
+        return values[index];
     }
-    _Math.closer = closer;
+    _Math.closest = closest;
     /**
      * Returns the cosine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
