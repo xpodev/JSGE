@@ -1,18 +1,17 @@
 declare module Errors {
-    class InvalidOperationError extends Error {
+    class BaseError extends Error {
         constructor(message: string);
     }
-    class NameError extends Error {
-        constructor(message: string);
+    export class InvalidOperationError extends BaseError {
     }
-    class IndexError extends Error {
-        constructor(message: string);
+    export class NameError extends BaseError {
     }
-    class KeyError extends Error {
-        constructor(message: string);
+    export class IndexError extends BaseError {
     }
-    class AssertionError extends Error {
-        constructor(message: string);
+    export class KeyError extends BaseError {
     }
+    export class AssertionError extends BaseError {
+    }
+    export {};
 }
 export default Errors;

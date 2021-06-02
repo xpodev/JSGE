@@ -1,38 +1,24 @@
 var Errors;
 (function (Errors) {
-    class InvalidOperationError extends Error {
+    class BaseError extends Error {
         constructor(message) {
             super(message);
-            this.name = "InvalidOperationError";
+            this.name = this.constructor.name;
         }
+    }
+    class InvalidOperationError extends BaseError {
     }
     Errors.InvalidOperationError = InvalidOperationError;
-    class NameError extends Error {
-        constructor(message) {
-            super(message);
-            this.name = "NameError";
-        }
+    class NameError extends BaseError {
     }
     Errors.NameError = NameError;
-    class IndexError extends Error {
-        constructor(message) {
-            super(message);
-            this.name = "IndexError";
-        }
+    class IndexError extends BaseError {
     }
     Errors.IndexError = IndexError;
-    class KeyError extends Error {
-        constructor(message) {
-            super(message);
-            this.name = "KeyError";
-        }
+    class KeyError extends BaseError {
     }
     Errors.KeyError = KeyError;
-    class AssertionError extends Error {
-        constructor(message) {
-            super(message);
-            this.name = "AssertionError";
-        }
+    class AssertionError extends BaseError {
     }
     Errors.AssertionError = AssertionError;
 })(Errors || (Errors = {}));

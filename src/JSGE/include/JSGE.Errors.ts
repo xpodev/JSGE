@@ -1,37 +1,29 @@
 module Errors {
-    export class InvalidOperationError extends Error {
+    class BaseError extends Error {
         constructor(message: string) {
             super(message);
-            this.name = "InvalidOperationError";
+            this.name = this.constructor.name;
         }
     }
 
-    export class NameError extends Error {
-        constructor(message: string) {
-            super(message);
-            this.name = "NameError";
-        }
+    export class InvalidOperationError extends BaseError {
+
     }
 
-    export class IndexError extends Error {
-        constructor(message: string) {
-            super(message);
-            this.name = "IndexError";
-        }
+    export class NameError extends BaseError {
+
     }
 
-    export class KeyError extends Error {
-        constructor(message: string) {
-            super(message);
-            this.name = "KeyError";
-        }
+    export class IndexError extends BaseError {
+
     }
 
-    export class AssertionError extends Error {
-        constructor(message: string) {
-            super(message);
-            this.name = "AssertionError";
-        }
+    export class KeyError extends BaseError {
+
+    }
+
+    export class AssertionError extends BaseError {
+
     }
 
 }
