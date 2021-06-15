@@ -34,10 +34,10 @@ export declare class Position2D extends Component {
     set enabled(v: any);
 }
 interface ICollider {
-    contains(p: _Math.Point2D | _Math.Point3D): boolean;
-    touches(p: _Math.Point2D | _Math.Point3D): boolean;
-    moveTo(p: _Math.Point2D | _Math.Point3D): void;
-    collisionPointsWith(other: ICollider): _Math.Point2D[] | _Math.Point3D[] | undefined;
+    contains(p: Point): boolean;
+    touches(p: Point): boolean;
+    moveTo(p: Point): void;
+    collisionPointsWith(other: ICollider): Point[] | undefined;
 }
 export declare class BoxCollider2D implements ICollider {
     x: number;
@@ -81,9 +81,10 @@ export declare class Collider2D extends Collider {
     private _updateColliders;
     get colliders(): ICollider[];
 }
+declare type Point = _Math.Point2D | _Math.Point3D;
 export declare class Collision {
     other: GameObject;
-    points: _Math.Point2D[] | _Math.Point3D[];
+    points: Point[];
     collider: ICollider;
 }
 export {};

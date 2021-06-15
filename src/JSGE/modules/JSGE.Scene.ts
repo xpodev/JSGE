@@ -122,7 +122,7 @@ export class Scene2D extends Scene {
                     }
                     const secondCollider = secondObject.getComponent(Collider2D);
                     secondCollider.colliders.forEach((otherCollider) => {
-                        const collisionPoint = (collider as BoxCollider2D).collisionPointsWith(otherCollider as BoxCollider2D);
+                        const collisionPoint = collider.collisionPointsWith(otherCollider);
                         if (collisionPoint.length) {
                             if (!firstCollider.isColliding) {
                                 firstCollider.collisionBegin.invoke({ other: secondObject, points: collisionPoint, collider: collider });

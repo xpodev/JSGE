@@ -1,6 +1,6 @@
 import GameEvent from "./JSGE.GameEvent.js";
 
-module Inputs {
+module Input {
     export enum KeyCode {
         KeyA = "KeyA",
         KeyB = "KeyB",
@@ -87,10 +87,10 @@ module Inputs {
         ArrowDown = "ArrowDown",
         ArrowLeft = "ArrowLeft",
         ArrowRight = "ArrowRight"
-    
+
     }
 
-    
+
     class AnyKeyboardEvent extends GameEvent<[KeyCode]> {
 
     }
@@ -98,7 +98,7 @@ module Inputs {
     class AnyMouseEvent extends GameEvent<[MouseEvent]> {
 
     }
-    
+
     export const KeyPressed = new AnyKeyboardEvent();
     export const KeyDown = new AnyKeyboardEvent();
     export const KeyUp = new AnyKeyboardEvent();
@@ -106,4 +106,4 @@ module Inputs {
     export const MouseClick = new AnyMouseEvent();
 }
 
-export default Inputs;
+export default Input;

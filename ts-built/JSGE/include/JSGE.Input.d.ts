@@ -1,5 +1,5 @@
 import GameEvent from "./JSGE.GameEvent.js";
-declare module Inputs {
+declare module Input {
     export enum KeyCode {
         KeyA = "KeyA",
         KeyB = "KeyB",
@@ -97,4 +97,4 @@ declare module Inputs {
     export const MouseClick: AnyMouseEvent;
     export {};
 }
-export default Inputs;
+export default Input;

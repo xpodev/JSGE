@@ -88,10 +88,10 @@ var UI;
             }
         }
         toHexString() {
-            return `#${this._r.toString(16).padStart(2, '0')}${this._g.toString(16).padStart(2, '0')}${this._b.toString(16).padStart(2, '0')}${(this._a * 255).toString(16).padStart(2, '0')}`;
+            return `${this}`;
         }
         toString() {
-            return this.toHexString();
+            return `#${this._r.toString(16).padStart(2, '0')}${this._g.toString(16).padStart(2, '0')}${this._b.toString(16).padStart(2, '0')}${(this._a * 255).toString(16).padStart(2, '0')}`;
         }
     }
     UI.Color = Color;

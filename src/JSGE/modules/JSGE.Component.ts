@@ -214,10 +214,10 @@ class AxisAlignedBoundingBox {
 }
 
 interface ICollider {
-    contains(p: _Math.Point2D | _Math.Point3D): boolean;
-    touches(p: _Math.Point2D | _Math.Point3D): boolean;
-    moveTo(p: _Math.Point2D | _Math.Point3D): void;
-    collisionPointsWith(other: ICollider): _Math.Point2D[] | _Math.Point3D[] | undefined;
+    contains(p: Point): boolean;
+    touches(p: Point): boolean;
+    moveTo(p: Point): void;
+    collisionPointsWith(other: ICollider): Point[] | undefined;
 }
 
 export class BoxCollider2D implements ICollider {
@@ -339,15 +339,17 @@ export class Collider2D extends Collider {
 }
 
 type Vertices = {
-    lt: _Math.Point2D | _Math.Point3D,
-    rt: _Math.Point2D | _Math.Point3D,
-    lb: _Math.Point2D | _Math.Point3D,
-    rb: _Math.Point2D | _Math.Point3D
+    lt: Point,
+    rt: Point,
+    lb: Point,
+    rb: Point
 }
+
+type Point = _Math.Point2D | _Math.Point3D;
 
 export class Collision {
     other: GameObject;
-    points: _Math.Point2D[] | _Math.Point3D[];
+    points: Point[];
     collider: ICollider;
 }
 

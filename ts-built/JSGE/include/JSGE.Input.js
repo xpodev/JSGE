@@ -1,6 +1,6 @@
 import GameEvent from "./JSGE.GameEvent.js";
-var Inputs;
-(function (Inputs) {
+var Input;
+(function (Input) {
     let KeyCode;
     (function (KeyCode) {
         KeyCode["KeyA"] = "KeyA";
@@ -88,14 +88,14 @@ var Inputs;
         KeyCode["ArrowDown"] = "ArrowDown";
         KeyCode["ArrowLeft"] = "ArrowLeft";
         KeyCode["ArrowRight"] = "ArrowRight";
-    })(KeyCode = Inputs.KeyCode || (Inputs.KeyCode = {}));
+    })(KeyCode = Input.KeyCode || (Input.KeyCode = {}));
     class AnyKeyboardEvent extends GameEvent {
     }
     class AnyMouseEvent extends GameEvent {
     }
-    Inputs.KeyPressed = new AnyKeyboardEvent();
-    Inputs.KeyDown = new AnyKeyboardEvent();
-    Inputs.KeyUp = new AnyKeyboardEvent();
-    Inputs.MouseClick = new AnyMouseEvent();
-})(Inputs || (Inputs = {}));
-export default Inputs;
+    Input.KeyPressed = new AnyKeyboardEvent();
+    Input.KeyDown = new AnyKeyboardEvent();
+    Input.KeyUp = new AnyKeyboardEvent();
+    Input.MouseClick = new AnyMouseEvent();
+})(Input || (Input = {}));
+export default Input;

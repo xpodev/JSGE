@@ -1,5 +1,5 @@
 import { Collider2D, Position2D } from "./JSGE.Component.js";
-import Inputs from "../include/JSGE.Input.js";
+import Input from "../include/JSGE.Input.js";
 import Utilities from "../include/JSGE.Utilities.js";
 import Errors from "../include/JSGE.Errors.js";
 import _Math from "../include/JSGE.Math.js";
@@ -9,7 +9,6 @@ class GameObject {
     constructor(_name) {
         this._name = _name;
         this._children = [];
-        this._event = new EventTarget();
         this.components = {};
         this.positionChanged = new GameEvent();
         this.addComponent(Position2D);
@@ -24,9 +23,6 @@ class GameObject {
     }
     get parent() {
         return this._parent;
-    }
-    get event() {
-        return this._event;
     }
     forAllChildren(func) {
         for (const gObj of this.children) {
@@ -47,7 +43,6 @@ class GameObject {
             return result;
         }
         if (raiseError) {
-            component = component;
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
         }
         return null;
@@ -60,7 +55,6 @@ class GameObject {
             return result;
         }
         if (raiseError) {
-            component = component;
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
         }
         return null;
@@ -69,28 +63,28 @@ class GameObject {
         return this.getComponent(component, false) != null;
     }
     bindKeyPress(targetKey, callback) {
-        Inputs.KeyPressed.subscribe((key) => {
+        Input.KeyPressed.subscribe((key) => {
             if (targetKey == key) {
                 callback();
             }
         });
     }
     bindKeyDown(targetKey, callback) {
-        Inputs.KeyDown.subscribe((key) => {
+        Input.KeyDown.subscribe((key) => {
             if (targetKey == key) {
                 callback();
             }
         });
     }
     bindKeyUp(targetKey, callback) {
-        Inputs.KeyUp.subscribe((key) => {
+        Input.KeyUp.subscribe((key) => {
             if (targetKey == key) {
                 callback();
             }
         });
     }
     bindMouseClick(callback, isMouseOver = true) {
-        Inputs.MouseClick.subscribe((event) => {
+        Input.MouseClick.subscribe((event) => {
             if (isMouseOver) {
                 const collision = this.getComponent(Collider2D);
                 if (collision) {

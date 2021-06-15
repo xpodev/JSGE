@@ -1,20 +1,20 @@
 import { Collider2D, Component, Position2D } from "./JSGE.Component.js";
-import Inputs from "../include/JSGE.Input.js";
+import Input from "../include/JSGE.Input.js";
 import Utilities from "../include/JSGE.Utilities.js";
 import Errors from "../include/JSGE.Errors.js";
 import _Math from "../include/JSGE.Math.js";
 import GameEvent from "../include/JSGE.GameEvent.js";
 import UI from "./JSGE.UI.js";
 
+
 abstract class GameObject {
-    constructor(private _name: string) {
+    constructor(private readonly _name: string) {
         this.addComponent(Position2D);
         this.position = this.getComponent(Position2D);
     }
 
     private _parent: GameObject;
     private readonly _children = [];
-    private readonly _event = new EventTarget();
     public readonly components: ComponentsList = {};
     public readonly position: Position2D;
 
@@ -31,10 +31,6 @@ abstract class GameObject {
 
     get parent() {
         return this._parent;
-    }
-
-    get event() {
-        return this._event;
     }
 
     /* #endregion */
@@ -62,7 +58,6 @@ abstract class GameObject {
             return result as T;
         }
         if (raiseError) {
-            component = component as Utilities.Constructor<T>;
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
         }
         return null;
@@ -76,7 +71,6 @@ abstract class GameObject {
             return result as T[];
         }
         if (raiseError) {
-            component = component as Utilities.Constructor<T>;
             throw new Errors.KeyError(`No component '${component.name}' found in '${this.name}'`);
         }
         return null;
@@ -86,32 +80,32 @@ abstract class GameObject {
         return this.getComponent<T>(component, false) != null;
     }
 
-    bindKeyPress(targetKey: Inputs.KeyCode, callback: () => {}) {
-        Inputs.KeyPressed.subscribe((key) => {
+    bindKeyPress(targetKey: Input.KeyCode, callback: () => {}) {
+        Input.KeyPressed.subscribe((key) => {
             if (targetKey == key) {
                 callback();
             }
-        })
+        });
     }
 
     bindKeyDown(targetKey: string, callback: Function) {
-        Inputs.KeyDown.subscribe((key) => {
+        Input.KeyDown.subscribe((key) => {
             if (targetKey == key) {
                 callback();
             }
-        })
+        });
     }
 
     bindKeyUp(targetKey: string, callback: Function) {
-        Inputs.KeyUp.subscribe((key) => {
+        Input.KeyUp.subscribe((key) => {
             if (targetKey == key) {
                 callback();
             }
-        })
+        });
     }
 
     bindMouseClick(callback: (ev: MouseEvent) => any, isMouseOver = true) {
-        Inputs.MouseClick.subscribe((event) => {
+        Input.MouseClick.subscribe((event) => {
             if (isMouseOver) {
                 const collision = this.getComponent(Collider2D);
                 if (collision) {
