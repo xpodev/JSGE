@@ -5,4 +5,4 @@
 An open source web game engine
 
 # Contributing
-The porject is still under contruction, we're always happy to add new members to this project.
+The project is still under contruction, we're always happy to add new members to this project.
