@@ -281,17 +281,17 @@ module _Math {
      * @param values the values to find the closest from
      */
     export function closest(x: number, values: number[]): number {
-        let minDistance = Infinity;
-        let index: number;
-        values.forEach((v, i) => {
-            const d = Math.abs(v - x);
-            if (d < minDistance) {
-                minDistance = d;
-                index = i;
-            }
-        });
+        let minDistance = Number.MAX_VALUE;
+        let index = 0;
+    
+        for (let i = 0; i < values.length; i++) {
+            const d = Math.abs(values[i] - x);
+            (d < minDistance) && (minDistance = d, index = i);
+        }
+    
         return values[index];
     }
+
     /**
      * Returns the cosine of a number.
      * @param x A numeric expression that contains an angle measured in radians.
